@@ -1,0 +1,9 @@
+{
+  "overview": "개요",
+  "handling-webhook-events": "웹훅 이벤트 처리",
+  "handling-websocket-events": "웹소켓 이벤트 처리",
+  "managing-subscriptions": "구독 관리",
+  "subscription-types": "구독 유형",
+  "reference": "레퍼런스",
+  "websocket-messages": "웹소켓 메시지"
+}

@@ -1,0 +1,16 @@
+{
+  "overview": "개요",
+  "getting-started": "시작하기",
+  "authenticating-with-the-server": "서버 인증",
+  "requesting-twitch-capabilities": "Requesting Twitch Capabilities",
+  "joining-a-chat-room": "채팅방 참여",
+  "send-and-receive-messages": "메시지 송수신",
+  "using-twitch-chat-commands": "트위치 채팅 명령어 사용",
+  "getting-emotes": "이모티콘 가져오기",
+  "twitch-irc-commands": "트위치 IRC 명령어",
+  "membership-commands": "멤버십 명령어",
+  "twitch-irc-tags": "트위치 IRC 태그",
+  "notice-message-ids": "공지 메시지 ID",
+  "example-chatbot": "챗봇 예제",
+  "example-message-parser": "메시지 파서 예제"
+}

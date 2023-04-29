@@ -1,0 +1,16 @@
+{
+  "overview": "Overview",
+  "getting-started": "Getting Started",
+  "authenticating-with-the-server": "Authenticating with the Server",
+  "requesting-twitch-capabilities": "Requesting Twitch Capabilities",
+  "joining-a-chat-room": "Joining a Chat Room",
+  "send-and-receive-messages": "Send and Receive Messages",
+  "using-twitch-chat-commands": "Using Twitch Chat Commands",
+  "getting-emotes": "Getting Emotes",
+  "twitch-irc-commands": "Twitch IRC Commands",
+  "membership-commands": "Membership Commands",
+  "twitch-irc-tags": "Twitch IRC Tags",
+  "notice-message-ids": "Notice Message IDs",
+  "example-chatbot": "Example Chatbot",
+  "example-message-parser": "Example Message Parser"
+}

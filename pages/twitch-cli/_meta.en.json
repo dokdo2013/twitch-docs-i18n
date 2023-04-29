@@ -1,0 +1,10 @@
+{
+  "overview": "Overview",
+  "configure-the-twitch-cli": "Configure the Twitch CLI",
+  "get-an-access-token": "Get an Access Token",
+  "call-api-endpoints": "Call API Endpoints",
+  "use-the-mock-data-server": "Use the Mock Data Server",
+  "test-webhook-events": "Test Webhook Events",
+  "get-cli-version": "Get CLI Version",
+  "test-websocket-events": "Test Websocket Events"
+}

@@ -1,0 +1,9 @@
+{
+  "overview": "Overview",
+  "handling-webhook-events": "Handling Webhook Events",
+  "handling-websocket-events": "Handling WebSocket Events",
+  "managing-subscriptions": "Managing Subscriptions",
+  "subscription-types": "Subscription Types",
+  "reference": "Reference",
+  "websocket-messages": "WebSocket Messages"
+}
