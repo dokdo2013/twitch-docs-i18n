@@ -1,0 +1,15 @@
+{
+	"overview": "개요",
+	"get-started": "시작하기",
+	"starting-a-raid": "레이드 시작하기",
+	"getting-goal-progress": "목표 진행 상황 가져오기",
+	"running-a-poll": "설문조사 만들기",
+	"running-a-prediction": "예측 만들기",
+	"creating-clips": "클립 만들기",
+	"creating-stream-markers": "스트림 마커 만들기",
+	"getting-videos": "비디오 가져오기",
+	"moderating-a-broadcaster-chat": "스트리머 채팅 관리하기",
+	"scheduling-broadcasts": "방송 스케줄 설정하기",
+	"twitch-api-concepts": "트위치 API 개념",	
+	"v5-migration-guide": "v5 마이그레이션 가이드"
+}

@@ -1,6 +1,6 @@
 # Twitch API Documentation i18n Project
 
-This repository contains the source code for the Open Source Twitch API Documentation i18n Website, a community-driven project aimed at providing translated documentation for the Twitch API. The website is built using Docusaurus 2, a modern static website generator.
+This repository contains the source code for the Open Source Twitch API Documentation i18n Website, a community-driven project aimed at providing translated documentation for the Twitch API. The website is built using Nextra, a modern static website generator written in Next.js.
 
 ## Contributing
 
