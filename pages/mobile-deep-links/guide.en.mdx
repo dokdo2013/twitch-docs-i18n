@@ -1,0 +1,68 @@
+# Mobile Deep Links
+
+## Introduction
+
+Deep links allow third party mobile apps and mobile web sites to bring users to a specific place within a Twitch app. This guide explains how to check whether the Twitch App is installed and describes deep link formats.
+
+Deep links are important because they allow tighter integration with Twitch on mobile apps. For example, an app that helps a broadcaster manage his channel could link directly to the user’s dashboard within the Twitch App (as opposed to just launching the app and leaving the user on the “Following” tab).
+
+You can find more information about deep links [here](https://en.wikipedia.org/wiki/Mobile_deep_linking). For support, visit the [Twitch Developer Forums](https://discuss.dev.twitch.tv/).
+
+## Checking Whether the Twitch App is Installed
+
+You can check whether the Twitch App is already installed on a mobile device as follows:
+
+### On iOS Objective C
+
+```objective-c
+NSURL *twitchURL = [NSURL URLWithString:@"twitch://open"];
+if ([[UIApplication sharedApplication] canOpenURL:twitchURL]) {
+    // The Twitch app is installed, do whatever logic you need, and call -openURL:
+} else {
+    // The Twitch app is not installed. Prompt the user to install it!
+}
+```
+
+### On iOS Swift
+
+```swift
+let twitchURL = NSURL(string: "twitch://open")
+if (UIApplication.sharedApplication().canOpenURL(twitchURL!)) {
+    // The Twitch app is installed, do whatever logic you need, and call -openURL:
+} else {
+    // The Twitch app is not installed. Prompt the user to install it!
+}
+```
+
+Note: On both iOS platforms, you also must change your app’s `Info.plist` file to declare that your app is allowed to query the twitch scheme. See the [Apple documentation](https://developer.apple.com/documentation/uikit/uiapplication/1622952-canopenurl) for detailed information. 
+
+### On Android
+
+```java
+// Where "packagename" is the package name of the Twitch app:
+private boolean isPackageInstalled(String packagename, Context context) {
+    PackageManager pm = context.getPackageManager();
+    try {
+        pm.getPackageInfo(packagename, PackageManager.GET_ACTIVITIES);
+        return true;
+    } catch (NameNotFoundException e) {
+        return false;
+    }
+}
+```
+
+## Deep Link Formats
+
+To launch the Twitch App, use `twitch://open`.
+
+| To launch the Twitch App and…	| Use this URL |
+| - | - |
+| Navigate to a specific channel | `twitch://stream/<channel name>`<br /> - OR - <br />`twitch://open?stream=<channel name>` |
+| Open a specific game directory | `twitch://game/<game name>`<br /> - OR - <br />`twitch://open?game=<game name>` |
+| Open a specific VOD	| `twitch://video/<video ID>`<br /> - OR - <br />`twitch://open?video=<video ID>` <br /><br /> For a VOD with this URL: `twitch.tv/some_channel/v/1234567` the `<video_id>` is v1234567. |
+| Open a specific channel activity feed (includes VODs)	| `twitch://channel/<channel name>` <br /> - OR - <br />`twitch://open?channel=<channel name>` |
+| Open the user’s “following” directory (first tab in the app) | `twitch://following` <br /> If the user is not logged in, this goes to the login page |
+| Open the login page	| `twitch://login` |
+| View a specific Category tag	| `twitch://directory/tags/<tag ID>` |
+| Open a specific live-stream tag	| `twitch://directory/all/tags/<tag ID>` |
+| Broadcast a specific game	| `twitch://broadcast?game_id=<game ID>` |
