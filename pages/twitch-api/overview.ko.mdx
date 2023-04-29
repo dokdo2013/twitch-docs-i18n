@@ -1,37 +1,32 @@
----
-id: overview
-title: Overview
-sidebar_position: 1
----
+# 트위치 API
 
-# Twitch API
+트위치 API는 트위치와 연동하기 위한 도구와 데이터를 제공합니다. 데이터 모델과 시스템은 쉽고 일관되며 신뢰할 수 있는 방식으로 관련 데이터를 제공하도록 설계되었습니다. 연동에 사용할 수 있는 엔드포인트의 전체 목록은 [트위치 API 레퍼런스](/ko/twitch-api/reference)를 참조하세요.
 
-The Twitch API provides the tools and data used to develop Twitch integrations. The data models and systems are designed to provide relevant data in an easy, consistent, and reliable way. For the full list of endpoints that you can use in your integration, explore the Twitch API Reference.
+트위치 API는 인증을 위해 OAuth 2.0을 사용합니다. API가 지원하는 여러 종류의 액세스 토큰에 대해 더 자세히 알고 싶다면, [인증](/ko/authentication/overview) 메뉴를 살펴보세요. 확장 프로그램과 관련된 엔드포인트를 이용할 계획이 있다면, JSON 웹 토큰(JWT)을 얻는 방법도 알아야 합니다. (자세한 내용은 [JSON 웹 토큰](/ko/extensions/required-technical-background#json-web-tokens-jwt)과 [확장 프로그램 암호 관리](/ko/extensions/building#managing-extension-secrets)를 참조하세요.)
 
-The Twitch API uses OAuth 2.0 for authentication. To learn about the different types of access tokens that the API supports, see Authentication. If you plan to use some of the extension-related endpoints, you’ll also need learn how to get JSON Web Tokens (JWT) (see JSON Web Tokens and Managing Extension Secrets).
+API 이용에 대한 자세한 내용은 다음 가이드를 참조하세요.
 
-For information about using the APIs, see the following guides:
+- [설문조사 만들기](/ko/twitch-api/running-a-poll)
+- [예측 만들기](/ko/twitch-api/running-a-prediction)
+- [레이드 시작하기](/ko/twitch-api/starting-a-raid)
+- [클립 만들기](/ko/twitch-api/creating-clips)
+- [스트림 마커 만들기](/ko/twitch-api/creating-stream-markers)
+- [비디오 가져오기](/ko/twitch-api/getting-videos)
+- [방송 스케줄 설정하기](/ko/twitch-api/scheduling-broadcasts)
+- [스트리머 채팅 관리하기](/ko/twitch-api/moderating-a-broadcasters-chat)
+- [목표 진행 상황 가져오기](/ko/twitch-api/getting-a-creators-goals)
+- [확장 프로그램 분석 조회하기](/ko/insights-and-analytics#extension-developer-analytics)
+- [게임 분석 조회하기](/ko/insights-and-analytics#game-developer-analytics)
 
-- Starting a Poll
-- Starting a Prediction
-- Starting a Raid
-- Creating Stream Clips
-- Creating Stream Markers
-- Getting Videos
-- Scheduling Broadcasts
-- Moderating a Broadcaster’s Chat
-- Getting a Creator’s Goals
-- Getting an Extension Analytics Report
-- Getting a Game Analytics Report
-- You should also become familiar with the following features:
+다음 기능에 대해서도 알아두는 것이 좋습니다.
 
-Feature	Description
-EventSub	The Twitch API provides APIs that you can call to poll the status of a given resource. These APIs are fine if you need a snapshot of the resource but it’s recommended that you subscribe to receive resource updates instead. For information about subscribing to events, see EventSub subscriptions.
-Command-line Interface	Twitch offers a command-line interface for managing Twitch resources. You can use it to call the Twitch endpoints, get an OAuth access token, and test EventSub events.
+| 기능 | 설명 |
+| - | - |
+| [EventSub](/ko/eventsub/overview) |	트위치 API는 특정 리소스의 상태를 주기적으로 조회하기 위한 API를 제공합니다. 이 API는 리소스의 상태를 기록하기 위한 용도로 사용할 수 있지만, 리소스 변경에 대한 구독을 더 추천합니다. EventSub 구독에 대한 자세한 내용은 [EventSub](/ko/eventsub/overview)을 참조하세요. |
+| [명령 줄 인터페이스](/ko/twitch-cli/overview) |	트위치는 트위치 리소스를 관리하기 위한 명령 줄 인터페이스를 제공합니다. 이를 사용하여 API 엔드포인트를 호출하고, OAuth 액세스 토큰을 얻으며, EventSub 이벤트를 테스트할 수도 있습니다. |
 
-## Next steps
-Call your first Twitch API in minutes using Getting started.
+## 다음 단계
 
-Thumb through Twitch API Concepts to learn how Twitch handles breaking changes, pagination, and rate limits.
+첫 번째 Twitch API를 호출하려면 [시작하기](/ko/twitch-api/getting-started)를 참조하세요.
 
-Join our community of Twitch developers! And for other ways to connect with the community, explore our developer support page.
+트위치 API [개념](/ko/twitch-api/twitch-api-concepts)을 통해 트위치가 [대규모 변경사항](/ko/twitch-api/twitch-api-concepts#breaking-changes), [페이지네이션](/ko/twitch-api/twitch-api-concepts#pagination), [속도 제한](/ko/twitch-api/twitch-api-concepts#twitch-rate-limits)을 처리하는 방법을 알아보세요.
