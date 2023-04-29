@@ -11,14 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/shuding/nextra-docs-template.git"
   },
-  "author": "Shu Ding <g@shud.in>",
+  "author": "Hyeon Woo Jo (dokdo2013)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/shuding/nextra-docs-template/issues"
   },
   "homepage": "https://github.com/shuding/nextra-docs-template#readme",
   "dependencies": {
-    "next": "^13.0.6",
+    "next": "^13.3.1",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
     "react": "^18.2.0",

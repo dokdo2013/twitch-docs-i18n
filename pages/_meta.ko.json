@@ -1,3 +1,7 @@
 {
-  "index": "인덱스"
+  "index": "개요",
+  "twitch-api": "API",
+  "eventsub": "이벤트 구독",
+  "auth": "인증",
+  "chat": "채팅 & 챗봇"
 }

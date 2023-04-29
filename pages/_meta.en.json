@@ -1,3 +1,7 @@
 {
-  "index": "Index"
+  "index": "Overview",
+  "twitch-api": "API",
+  "eventsub": "EventSub",
+  "auth": "Authentication",
+  "chat": "Chat & Chatbot"
 }
