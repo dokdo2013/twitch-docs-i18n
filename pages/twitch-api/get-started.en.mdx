@@ -8,21 +8,21 @@ A Twitch account. That’s all you need. No special developer credentials or tok
 
 ## Register an application
 
-All Twitch integrations require you to register your app with Twitch. For information about how to register an app, see Register your app. For this exercise, use the following information to register your app:
+All Twitch integrations require you to register your app with Twitch. For information about how to register an app, see [Register your app](/authentication/register-app). For this exercise, use the following information to register your app:
 
-- Set Name to any name you’d like, it just needs to be unique amongst all Twitch applications.
+- Set **Name** to any name you’d like, it just needs to be unique amongst all Twitch applications.
 - Set OAuth Redirect URLs to http://localhost:3000.
-- Choose any Category of application that you’d like.
-- Capture your Client ID, which you’ll use in the next step to get an OAuth token.
-- Click New Secret to generate a secret, which you’ll use in the next step to get an OAuth token.
+- Choose any **Category** of application that you’d like.
+- Capture your **Client ID**, which you’ll use in the next step to get an OAuth token.
+- Click **New Secret** to generate a secret, which you’ll use in the next step to get an OAuth token.
 
 ## Get an OAuth token
 
-Twitch requires OAuth access tokens to access most Twitch resources. A resource requires either an app access token or user access token. To determine which type of token a resource requires, see the reference content for the endpoints you plan to use.
+Twitch requires OAuth access tokens to access most Twitch resources. A resource requires either an app access token or user access token. To determine which type of token a resource requires, see the [reference](/twitch-api/reference) content for the endpoints you plan to use.
 
-Because the Get Users endpoint (which we’re using to get information about the TwitchDev user) accepts either type of token, let’s get an app access token since it’s easier. For information about app access tokens, see Client Credentials Grant Flow.
+Because the [Get Users](/twitch-api/reference/get-users) endpoint (which we’re using to get information about the TwitchDev user) accepts either type of token, let’s get an app access token since it’s easier. For information about app access tokens, see [Client Credentials Grant Flow](/authentication/getting-tokens-oauth#client-credentials-grant-flow).
 
-For this exercise, open a terminal window and enter the following cURL POST command (you’ll need cURL installed on your computer). Update the client ID and secret placeholders with the client ID and secret you recieved when you registered your app.
+For this exercise, open a terminal window and enter the following cURL POST command (you’ll need [cURL installed](https://curl.se/download.html) on your computer). Update the client ID and secret placeholders with the client ID and secret you recieved when you registered your app.
 
 ```bash
 curl -X POST 'https://id.twitch.tv/oauth2/token' \
@@ -30,7 +30,7 @@ curl -X POST 'https://id.twitch.tv/oauth2/token' \
 -d 'client_id=`<your client id goes here>`&client_secret=`<your client secret goes here>`&grant_type=client_credentials'
 ```
 
-**NOTE** For information about running the query on Microsoft Windows, see cURL examples.
+**NOTE** For information about running the query on Microsoft Windows, see [cURL examples](/twitch-api/twitch-api-concepts#curl-examples).
 
 The response contains a JSON object with the access token.
 
@@ -42,11 +42,11 @@ The response contains a JSON object with the access token.
 }
 ```
 
-You can also use Twitch’s CLI to get an OAuth token for testing. See Using the CLI to Get an Access Token.
+You can also use Twitch’s [CLI](/twitch-cli/overview) to get an OAuth token for testing. See [Using the CLI to Get an Access Token](/twitch-cli/token-command).
 
 ## Make your first call
 
-To get information about the TwitchDev user, you use the Get Users endpoint. The endpoint requires a user’s name or ID. Because we know the user’s name, set the login query parameter to TwitchDev’s login name, which is twitchdev (all lowercase). Remember to replace the OAuth Bearer token with your token and the client ID with your app’s ID.
+To get information about the TwitchDev user, you use the [Get Users](/twitch-api/reference/get-users) endpoint. The endpoint requires a user’s name or ID. Because we know the user’s name, set the login query parameter to TwitchDev’s login name, which is twitchdev (all lowercase). Remember to replace the OAuth Bearer token with your token and the client ID with your app’s ID.
 
 ```bash
 curl -X GET 'https://api.twitch.tv/helix/users?login=twitchdev' \
@@ -54,7 +54,7 @@ curl -X GET 'https://api.twitch.tv/helix/users?login=twitchdev' \
 -H 'Client-Id: wbmytr93xzw8zbg0p1izqyzzc5mbiz'
 ```
 
-NOTE For information about running the query on Microsoft Windows, see cURL examples.
+NOTE For information about running the query on Microsoft Windows, see [cURL examples](/twitch-api/twitch-api-concepts#curl-examples).
 
 ### The JSON response
 
@@ -81,12 +81,10 @@ The following example shows the JSON response that the request returns.
 
 ## Next steps
 
-Check out the Twitch’s command-line interface (CLI), which you can use to call Twitch endpoints.
+Check out the Twitch’s [command-line interface](/twitch-cli/overview) (CLI), which you can use to call Twitch endpoints.
 
-For a list of the endpoints that you can call, see Twitch API Reference.
+For a list of the endpoints that you can call, see [Twitch API Reference](/twitch-api/reference).
 
-Thumb through Twitch API Concepts to learn how Twitch handles breaking changes, pagination, and rate limits.
+Thumb through Twitch API [Concepts](/twitch-api/twitch-api-concepts) to learn how Twitch [handles breaking changes](/twitch-api/twitch-api-concepts#breaking-changes), [pagination](/twitch-api/twitch-api-concepts#pagination), and [rate limits](/twitch-api/twitch-api-concepts#twitch-rate-limits).
 
-To get into the nuts and bolts of authentication, see the Authentication guide. This guide explains how to enable your application to take actions on behalf of a Twitch account, or access specific data about a user’s account.
-
-Join our community of Twitch developers! And for other ways to connect with the community, explore our developer support page.
+To get into the nuts and bolts of authentication, see the [Authentication](/authentication/overview) guide. This guide explains how to enable your application to take actions on behalf of a Twitch account, or access specific data about a user’s account.
