@@ -6,7 +6,7 @@ const config: DocsThemeConfig = {
   project: {
     link: "https://github.com/dokdo2013/twitch-docs-i18n",
   },
-  docsRepositoryBase: "https://github.com/dokdo2013/twitch-docs-i18n",
+  docsRepositoryBase: "https://github.com/dokdo2013/twitch-docs-i18n/tree/main",
   footer: {
     text: "Copyright © 2023 Twitch Docs i18n, Hyeon Woo Jo. Built with Nextra",
   },
