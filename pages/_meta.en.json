@@ -2,6 +2,15 @@
   "index": "Overview",
   "twitch-api": "API",
   "eventsub": "EventSub",
+  "chat": "Chat & Chatbot",
   "auth": "Authentication",
-  "chat": "Chat & Chatbot"
+  "organizations": "Organizations",
+  "drops": "Drops",
+  "embedding-twitch": "Embedding Twitch",
+  "extensions": "Extensions",
+  "insights-and-analytics": "Insights & Analytics",
+  "mobile-deep-links": "Mobile Deep Links",
+  "pubsub": "PubSub",
+  "video-broadcast": "Video Broadcast",
+  "twitch-cli": "Twitch CLI"
 }

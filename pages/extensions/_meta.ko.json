@@ -1,0 +1,16 @@
+{
+  "get-started": "Get Started",
+  "required-technical-background": "Required Technical Background",
+  "designing-extensions": "Designing Extensions",
+  "building-extensions": "Building Extensions",
+  "using-the-twitch-api-in-an-extension-front-end": "Using the Twitch API in an Extension Front End",
+  "life-cycle-management": "Life Cycle Management",
+  "monetization": "Monetization",
+  "ab-testing": "A/B Testing",
+  "using-google-analytics": "Using Google Analytics",
+  "increase-feedback": "Increase Feedback",
+  "load-testing-extensions": "Load Testing Extensions",
+  "submission-best-practices": "Submission Best Practices",
+  "guidelines-and-policies": "Guidelines and Policies",
+  "reference": "Reference"
+}

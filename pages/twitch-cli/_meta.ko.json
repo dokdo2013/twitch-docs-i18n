@@ -1,0 +1,10 @@
+{
+  "overview": "개요",
+  "configure-the-twitch-cli": "트위치 CLI 구성",
+  "get-an-access-token": "액세스 토큰 획득",
+  "call-api-endpoints": "API 엔드포인트 호출",
+  "use-the-mock-data-server": "모의 데이터 서버 이용",
+  "test-webhook-events": "웹훅 이벤트 테스트",
+  "get-cli-version": "CLI 버전 조회",
+  "test-websocket-events": "웹소켓 이벤트 테스트"
+}

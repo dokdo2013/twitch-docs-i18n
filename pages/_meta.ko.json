@@ -1,7 +1,16 @@
 {
   "index": "개요",
   "twitch-api": "API",
-  "eventsub": "이벤트 구독",
+  "eventsub": "EventSub",
+  "chat": "채팅 & 챗봇",
   "auth": "인증",
-  "chat": "채팅 & 챗봇"
+  "organizations": "조직",
+  "drops": "드롭스",
+  "embedding-twitch": "트위치 임베딩",
+  "extensions": "확장 프로그램",
+  "insights-and-analytics": "인사이트 & 분석",
+  "mobile-deep-links": "모바일 딥 링크",
+  "pubsub": "PubSub",
+  "video-broadcast": "방송",
+  "twitch-cli": "트위치 CLI"
 }

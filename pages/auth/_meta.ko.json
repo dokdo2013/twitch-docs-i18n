@@ -1,0 +1,10 @@
+{
+  "overview": "개요",
+  "register-your-app": "앱 등록",
+  "getting-oauth-tokens": "OAuth 토큰 획득",
+  "get-oauth-tokens-using-oidc": "OIDC를 사용하여 OAuth 토큰 획득",
+  "refreshing-access-tokens": "액세스 토큰 갱신",
+  "validating-tokens": "토큰 유효성 검사",
+  "revoking-access-tokens": "액세스 토큰 만료",
+  "scopes": "토큰 범위"
+}

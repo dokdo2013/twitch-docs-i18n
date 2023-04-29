@@ -1,0 +1,10 @@
+{
+  "overview": "Overview",
+  "register-your-app": "Register your app",
+  "getting-oauth-tokens": "Getting OAuth tokens",
+  "get-oauth-tokens-using-oidc": "Get OAuth tokens using OIDC",
+  "refreshing-access-tokens": "Refreshing access tokens",
+  "validating-tokens": "Validating tokens",
+  "revoking-access-tokens": "Revoking access tokens",
+  "scopes": "Scopes"
+}
