@@ -14,6 +14,14 @@ const config: DocsThemeConfig = {
     { locale: "en", text: "English" },
     { locale: "ko", text: "한국어" },
   ],
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s - Twitch Docs i18n",
+    }
+  },
+  sidebar: {
+    defaultMenuCollapseLevel: 1,
+  }
 };
 
 export default config;
