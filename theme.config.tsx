@@ -1,18 +1,19 @@
-import React from 'react'
-import { DocsThemeConfig } from 'nextra-theme-docs'
+import React from "react";
+import { DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
+  logo: <span>Twitch API Docs i18n</span>,
   project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+    link: "https://github.com/dokdo2013/twitch-docs-i18n",
   },
-  chat: {
-    link: 'https://discord.com',
-  },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
+  docsRepositoryBase: "https://github.com/dokdo2013/twitch-docs-i18n",
   footer: {
-    text: 'Nextra Docs Template',
+    text: "Copyright © 2023 Twitch Docs i18n, Hyeon Woo Jo. Built with Nextra",
   },
-}
+  i18n: [
+    { locale: "en", text: "English" },
+    { locale: "ko", text: "한국어" },
+  ],
+};
 
-export default config
+export default config;
