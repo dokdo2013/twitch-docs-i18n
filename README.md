@@ -11,7 +11,7 @@ We are always looking for contributors to help us improve and expand the transla
 2. Clone your fork of the repository to your local machine:
 
 ```
-git clone https://github.com/your_username/twitch-docs-i18n.git
+git clone https://github.com/dokdo2013/twitch-docs-i18n.git
 ```
 
 3. Change to the project directory:
@@ -74,4 +74,4 @@ By participating in this project, you agree to abide by these rules and to follo
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for more information.
+This project is licensed under the MIT License. See the [`LICENSE`](https://github.com/dokdo2013/twitch-docs-i18n/blob/main/LICENSE) file for more information.
