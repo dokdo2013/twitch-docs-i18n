@@ -1,0 +1,33 @@
+# EventSub
+
+EventSub subscriptions let your application listen for events that happen on Twitch. When an event occurs for one of your subscriptions, Twitch sends you a notification. For example, you can receive a notification when:
+
+- A broadcaster goes online
+- A broadcaster gets a new follower
+- A broadcaster gets a new subscriber
+- A user cheered in a channel
+- A user redeemed Channel Points
+
+Twitch support the following transport methods:
+
+- Webhook
+- WebSocket
+
+Before you can subscribe to events, you must create a webhook callback or WebSocket client that listens for events. For information about webhook callbacks, see Getting Events Using Webhook Callbacks and for information about WebSocket clients, see Getting Events Using WebSockets.
+
+After implementing your webhook callback or WebSocket client, you can subscribe to events. For information about subscribing to events, see Managing Subscriptions.
+
+**NOTE**: EventSub subscriptions are transport agnostic. For the most part, all subscriptions are available to all transports that Twitch supports. If a transport can’t support a subscription type, the documenation will identify the restriction. When new subscription types are added to EventSub, Twitch supports them on all transports simultaneously, when possible.
+
+## Handling duplicate events
+
+Twitch sends event notifications at least once, but if Twitch is unsure of whether you received a notification, it’ll resend the event. Under some circumstances this means you may receive a notification twice. If Twitch resends the message, the message ID will be the same.
+
+If receiving the same message more than once is an issue, you’ll need to track messages that you’ve processed. The `message_id` field contains the message’s ID. If you’ve already processed the message, don’t process the message again.
+
+## Guarding against replay attacks
+
+If you need resiliency against replay attacks, consider the following:
+
+- Make sure the value in the message_timestamp field isn’t older than 10 minutes.
+- Make sure you haven’t seen the ID in the message_id field before.
