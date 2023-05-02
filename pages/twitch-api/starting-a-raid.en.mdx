@@ -1,16 +1,10 @@
----
-id: starting-a-raid
-title: Starting a Raid
-sidebar_position: 3
----
-
 # Raids
 
 A Raid is a Twitch feature that lets a broadcaster send their viewers over to watch another broadcaster’s stream. Raiding is a great way to make connections and network with other broadcasters by sharing audiences and growing your communities.
 
 ## To raid another broadcaster
 
-To raid another broadcaster, your chatbot or Extension POSTs a request to the Start a raid endpoint. Set the request’s from_broadcaster_id query parameter to the broadcaster that’s sending the raiding party and set the to_broadcaster_id query parameter to the broadcaster that’s being raided.
+To raid another broadcaster, your chatbot or Extension POSTs a request to the [Start a raid](/twitch-api/reference/start-a-raid) endpoint. Set the request’s from_broadcaster_id query parameter to the broadcaster that’s sending the raiding party and set the to_broadcaster_id query parameter to the broadcaster that’s being raided.
 
 ```bash
 curl -X POST 'https://api.twitch.tv/helix/raids?from_broadcaster_id=12345678&to_broadcaster_id=87654321' \
@@ -18,7 +12,7 @@ curl -X POST 'https://api.twitch.tv/helix/raids?from_broadcaster_id=12345678&to_
 -H 'Client-Id: hof5gwx0su6owfnys0nyan9c87zr6t'
 ```
 
-The request doesn’t actually start the raid but instead pops up a window at the top of the raiding broadcaster’s chat room that shows the number of viewers in the raid. The raid occurs when the broadcaster clicks Raid Now or after the 90 seconds countdown expires.
+The request doesn’t actually start the raid but instead pops up a window at the top of the raiding broadcaster’s chat room that shows the number of viewers in the raid. The raid occurs when the broadcaster clicks **Raid Now** or after the 90 seconds countdown expires.
 
 Here’s what the response looks like to the previous request:
 
@@ -33,11 +27,11 @@ Here’s what the response looks like to the previous request:
 }
 ```
 
-You can use the is_mature field in the response to let viewers know that the targeted channel contains mature content. The Twitch UX also lets viewers know that the targeted channel restricts chat to subscribers only or followers only. If you want to provide the same information in your experience, use the Get Chat Settings endpoint and check the subscriber_mode and follower_mode fields.
+You can use the `is_mature` field in the response to let viewers know that the targeted channel contains mature content. The Twitch UX also lets viewers know that the targeted channel restricts chat to subscribers only or followers only. If you want to provide the same information in your experience, use the [Get Chat Settings](/twitch-api/reference/get-chat-settings) endpoint and check the `subscriber_mode` and `follower_mode` fields.
 
 ## Get notified when a raid begins
 
-The Start a raid response just lets you know that the request was queued. To determine whether the raid actually took place, you must subscribe to the Channel Raid event. For details about subscribing to an event, see EventSub.
+The [Start a raid](/twitch-api/reference/start-a-raid) response just lets you know that the request was queued. To determine whether the raid actually took place, you must subscribe to the Channel Raid event. For details about subscribing to an event, see EventSub.
 
 To know whether the raid event is for your raid, compare the from and to broadcaster IDs in your request to the from and to IDs in the event.
 

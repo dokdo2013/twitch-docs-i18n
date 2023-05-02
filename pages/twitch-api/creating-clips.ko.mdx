@@ -1,0 +1,149 @@
+# Clips
+
+Clips lets Twitch viewers share interesting moments from broadcasts while letting broadcasters grow their channels through social sharing! Read more
+
+## Creating Clips
+
+To create a clip from a broadcaster’s stream, use the Create Clip API. It’s easy to use, just specify the ID of the broadcaster whose stream you want to create a clip from. The OAuth user access token must include the **clips:edit** scope.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/clips?broadcaster_id=123456' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+The following example shows the request’s response.
+
+```json
+{
+  "data": [
+    {
+      "id": "FunPoisedGiraffeGingerPower-KDy2fwLNuUEHU",
+      "edit_url": "https://clips.twitch.tv/FunPoisedGiraffeGingerPower-KDy2fwLNuUEHU/edit"
+    }
+  ]
+}
+```
+
+Creating a clip is an asynchronous process that can take a short amount of time to complete. To determine whether the clip was successfully created, call Get Clips using the clip ID that the request returned. If Get Clips returns the clip, the clip was successfully created. If, after 15 seconds, Get Clips hasn’t returned the clip, assume it failed.
+
+The API captures up to 90 seconds of the broadcaster’s stream. The 90 seconds spans the point in the stream when you called the API; about 85 seconds of the stream before the call and about 5 seconds after the call. For example, if you called the API at the 4:00 minute mark, the API captures from approximately the 3:35 mark to approximately the 4:05 minute mark. While Twitch tries its best to capture 90 seconds of the stream, the actual length may be less. For example, it may be less if you begin capturing the clip near the beginning or end of the stream.
+
+By default, Twitch publishes up to the last 30 seconds of the 90 seconds window and provides a default title for the clip. If you want control over the title and which portion of the 90 seconds window is used as the clip, use the URL in the response’s `edit_url` field. You can specify a clip that’s from 5 seconds in length to 60 seconds in length. The URL is valid for up to 24 hours or until the clip is published, whichever comes first.
+
+### Setting optional parameters
+
+The API provides an optional has_delay query parameter. Use this parameter to capture the clip at the time the viewer requests it or after a delay. If **false**, the API captures the clip at the point in time that the viewer requests it (this is the same experience that the Twitch UX provides). If **true**, Twitch adds a delay before capturing the clip, which basically shifts the capture window to the right slightly. The default is **false**.
+
+### Possible issues you can run into
+
+You may only capture clips:
+
+- If the broadcaster is streaming.
+- If the broadcaster has enabled clips (see **Clips Settings** under **Creator Dashboard, Settings, Stream**).
+- If the broadcaster hasn’t enabled the follower-only or subscribers-only clips settings, or if they have, you are a subscriber or a follower that has followed the broadcaster the required amount of time.
+
+## Getting clips
+
+To get clips, use the Get Clips API. The API lets you get specific clips, get clips captured from a specific game, or get clips captured from a specific broadcaster’s streams.
+
+You can use any valid OAuth token to get clips, such as an app access token or user access token. For example, if you’re also creating clips, just use that user access token.
+
+Depending on the broadcaster or game, it’s possible that the results may contain a large number of clips. By default, the API returns 20 clips. If the results contain more than 20 clips, the response’s `pagination` field includes a `cursor` that you use to get the next page of clips. For information about paging results, see Pagination. Only specify the pagination parameters (first, after, and before) if you specify the game_id or broadcaster_id query parameter.
+
+The following example shows what the Get Clips response looks like. The broadcaster fields identify the broadcaster whose stream the clip was captured from and the creator fields identify the viewer that captured the clip. To get the game’s title, use the Get Games API and set the id query parameter to the ID in the `game_id` field. Use the URL in the `embed_url` field to embed the clip in your user experience (see Embedding Video and Clips). Note that the `title` field may not contain useful information.
+
+```json
+{
+  "data": [
+    {
+      "id": "AnimatedOptimisticWasabiVoteNay",
+      "url": "https://clips.twitch.tv/AnimatedOptimisticWasabiVoteNay",
+      "embed_url": "https://clips.twitch.tv/embed?clip=AnimatedOptimisticWasabiVoteNay",
+      "broadcaster_id": "423168062",
+      "broadcaster_name": "qa_vod_automation",
+      "creator_id": "7036025",
+      "creator_name": "Crono",
+      "video_id": "704533034",
+      "game_id": "27471",
+      "language": "en",
+      "title": "a",
+      "view_count": 1198514,
+      "created_at": "2020-08-10T17:04:10Z",
+      "thumbnail_url": "https://clips-media-assets2.twitch.tv/100660082970470268-offset-153206-preview-480x272.jpg",
+      "duration": 28,
+      "vod_offset": 222
+    },
+    . . .
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7IkN1cnNvciI6Ik1qQT0ifX0"
+  }
+}
+```
+
+### Offset to the clip in the video
+
+Clips include a `vod_offset` field, which contains the offset, in seconds, from the beginning of the video to the start of the clip. Twitch keeps videos for a minimum amount of time before deleting them and broadcasters can also delete their videos. If the video is no longer available, the `video_id` field is set to an empty string and the `vod_offset` field is set to null.
+
+If you get a clip that was created during the current broadcast, the `video_id` field may contain an empty string and the `vod_offset` field may contain null. This is because there’s a delay between when a clip is created during a broadcast and when the offset is determined. The delay is indeterminate but typically lasts minutes. If you get the clip after the delay, the `video_id` field will contain the video’s ID and the `vod_offset` field will contain the clip’s offset.
+
+### Getting a broadcaster’s clips
+
+To get clips captured from a specific broadcaster’s streams, use the broadcaster_id query parameter.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/clips?broadcaster_id=123456' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+The clips are returned in descending order of views. Because the request could return thousands of results to page through, you could use the first query parameter to get the top 10 clips with the most views. Or, to get clips captured within a specific date range, use the started_at and ended_at query parameters (see Getting clips captured within a specific date range).
+
+### Getting a game’s clips
+
+To get clips captured from a specific game, use the game_id query parameter. The following example shows how to get all clips captured from broadcasters that were playing Minecraft.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/clips?game_id=27471' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+The clips are returned in descending order of views. Because the request could return thousands of results to page through, you could use the first query parameter to get the top 10 clips with the most views. Or, to get clips captured within a specific date range, use the started_at and ended_at query parameters (see Getting clips captured within a specific date range).
+
+To get a game’s ID, use the Search Categories API.
+
+### Getting a specific clip
+
+To get specific clips, use the id query parameter. Include the id query parameter for each ID that you specify. You may specify a maximum of 100 IDs.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/clips?id=SpillYummyPigeonPieHuhu&id=DillDiligentTireOneHand' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+If you specify the id query parameter, the API ignores the pagination query parameters and date range parameters.
+
+### Getting clips captured within a specific date range
+
+By default, Get Clips returns all clips that were captured for the specified game or broadcaster. If you’re only interested in clips for a specific date range like the last week or yesterday, use the started_at and ended_at query parameters. Dates are UTC.
+
+The following example shows how to get clips that were captured in the last week from the specified broadcaster’s streams.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/clips?broadcaster_id=123456&started_at=2022-07-03T00:00:00Z&ended_at=2022-07-09T00:00:00Z' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+The ended_at parameter is optional. If you don’t specify it, the date range is one week from the start date. The following example shows how the above request could have been written:
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/clips?broadcaster_id=123456&started_at=2022-07-03T00:00:00Z' \
+-H 'Authorization: Bearer n6fyjy1qlo2hmzzt3bdjhkdgda4d' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyac87zr6t'
+```
+
+Specify a date range only if you specify the game_id or broadcaster_id query parameter.

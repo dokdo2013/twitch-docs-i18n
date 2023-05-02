@@ -1,0 +1,60 @@
+# Creator Goals
+
+The Creator Goals API returns active goals that broadcasters create on Twitch. For example, broadcasters can add a goal to increase subscribers or followers. Broadcasters create these goals to rally their community to achieve new levels of success and hype, and it provides the community a way to support the channel. Goals can be daily goals, subathons, or anything in between. To get a broadcaster’s goals, see Getting a broadcaster’s creator goals.
+
+For information about creating Creator Goals, see the Creating a Goal section of the Creator Goals help article.
+
+If you want to get notified when progress is made towards a broadcaster’s goals, add event subscriptions. To add notifications, see Requesting event notifications.
+
+## Getting a broadcaster’s Creator Goals
+
+To get a broadcaster’s creator goals, send a GET request to the Get Creator Goals endpoint. Set the broadcaster_id query parameter to the ID of the broadcaster whose goals you want to get. For example, to get the goals that TwitchDev (141981764) created, send the following cURL request:
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/goals?broadcaster_id=141981764' \
+-H 'Authorization: Bearer `<user access token goes here>`' \
+-H 'Client-Id: `<client id goes here>`'
+```
+
+Here’s what the response looks like:
+
+```json
+{
+  "data": [
+    {
+      "id": "1woowvbkiNv8BRxEWSqmQz6Zk92",
+      "broadcaster_id": "141981764",
+      "broadcaster_name": "TwitchDev",
+      "broadcaster_login": "twitchdev",
+      "type": "follower",
+      "description": "Follow goal for Helix testing",
+      "current_amount": 27062,
+      "target_amount": 30000,
+      "created_at": "2021-08-16T17:22:23Z"
+    }
+  ]
+}
+```
+
+**NOTE**: Although the API currently supports only one goal, you should write your application to support one or more goals.
+
+The fields you’ll most likely use are `target_amount` and `current_amount`. The `target_amount` field is the broadcaster’s goal. For example, if the broadcaster has 200 followers, and their goal is to double that number, this field is set to 400. When the goal starts, `current_amount` is set to 200, and it increases and decreases as the broadcaster gets new followers or loses followers.
+
+The subscription and new_subscription types are a little different in that `current_amount` doesn’t increase by one for each new subscription. Instead, the value increases by the number of points associated with the subscription’s tier-level. For example, if the points associated with a tier-two subscription is 2, the `current_amount` value would increase by 2.
+
+The broadcaster may or may not have provided a description of the goal, so check to make sure it’s not empty before using it.
+
+For more information about the request, response, and required user OAuth scope, see Get Creator Goals in Reference.
+
+## Requesting event notifications
+
+Using the API is great for discovering the broadcaster’s goals, and to get a snapshot of the current state of the goal, but if you want to display real-time progress of the goal, you need to subscribe to Creator Goals events. Twitch provides events when:
+
+- The broadcaster creates a goal
+- Progress is made towards the goal
+- The broadcaster ends the goal
+
+For information about subscribing to and receiving events, see EventSub.
+
+For details about the specifics of the Creator Goals events, like subscription type and event data, see Creator Goals Subscriptions.
+

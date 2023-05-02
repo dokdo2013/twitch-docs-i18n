@@ -1,0 +1,195 @@
+# Videos
+
+When a broadcaster enables on-demand videos, their live streams are saved as videos. This lets the broadcaster’s fans watch the streams they missed. Read more
+
+The Twitch API lets apps:
+
+- Display a list of videos. Users can then select a video from the list to watch. For information about embedding and viewing videos, see Embedding Video and Clips.
+- Delete one or more videos. Broadcasters can manage their videos by deleting videos they no longer want in their library.
+
+## Getting videos
+
+To get videos, use the Get Videos API. The API lets you get videos by ID, by broadcaster, or by game. The request requires an app access token or user access token.
+
+### Getting videos by ID
+
+To get videos by ID, set the id query parameter to the ID of the video you want to get. You may specify a maximum of 100 IDs. To specify multiple IDs, repeat the id parameter for each video you want to get. For example, `id=123&id=456&id=789`.
+
+The following example, gets a single video.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/videos?id=987654321' \
+-H 'Authorization: Bearer ohzjccugqczn10eau1pfophkpv' \
+-H 'Client-Id: hof5gwx0su6owfnyan9c87zr6t'
+```
+
+Here’s what the response looks like:
+
+```json
+{
+  "data": [
+    {
+      "id": "987654321",
+      "stream_id": "111222333",
+      "user_id": "56789",
+      "user_login": "zzzztopper",
+      "user_name": "zzzzTopper",
+      "title": "The incredible artistry that is me.",
+      "description": "",
+      "created_at": "2022-07-08T16:58:46Z",
+      "published_at": "2022-07-08T16:58:46Z",
+      "url": "https://www.twitch.tv/videos/987654321",
+      "thumbnail_url": "https://static-cdn.jtvnw.net/cf_vods/dgeft87wbj63p/ce4ddf3095472cde00cd_zzzztopper_45725106652_1657299521//thumb/thumb0-%{width}x%{height}.jpg",
+      "viewable": "public",
+      "view_count": 395246,
+      "language": "en",
+      "type": "archive",
+      "duration": "6h26m14s",
+      "muted_segments": null
+    }
+  ],
+  "pagination": {}
+}
+```
+
+If you request multiple videos, the API returns them in the same order that you requested them in. The API ignores duplicate IDs. If the list contains invalid IDs, the API ignores them if the list also contains valid IDs; otherwise, the API returns 404 Not Found.
+
+The request ignores all optional parameters like pagination and sorting parameters.
+
+### Getting videos by broadcaster
+
+To get a broadcaster’s videos, set the user_id query parameter to the ID of the broadcaster whose videos you want to get. The API returns the videos in descending order by when they were created (latest video first).
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/videos?user_id=123456' \
+-H 'Authorization: Bearer ohzjccugqczn10eau1pfophkpv' \
+-H 'Client-Id: hof5gwx0su6owfnyan9c87zr6t'
+```
+
+Some broadcasters may have a long list of videos to page through. To page through all the videos, use the optional first, after, and before query parameters. For information about paging, see Pagination.
+
+By default, the API returns the broadcaster’s VODs, highlights, and uploads. To filter the list by type, use the type query parameter. To return only VODs, set type to archive; to return only highlights, set type to highlights; and to return only videos that the broadcaster has uploaded, set type to upload.
+
+The following example returns the broadcaster’s highlight videos.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/videos?user_id=123456&type=highlight' \
+-H 'Authorization: Bearer ohzjccugqczn10eau1pfophkpv' \
+-H 'Client-Id: hof5gwx0su6owfnyan9c87zr6t'
+```
+
+Here’s what the response looks like:
+
+```json
+{
+  "data": [
+    {
+      "id": "11223344",
+      "stream_id": "111222333",
+      "user_id": "56789",
+      "user_login": "zzzztopper",
+      "user_name": "zzzzTopper",
+      "title": "The incredible artistry that is me.",
+      "description": "",
+      "created_at": "2022-07-08T16:58:46Z",
+      "published_at": "2022-07-08T16:58:46Z",
+      "url": "https://www.twitch.tv/videos/11223344",
+      "thumbnail_url": "https://static-cdn.jtvnw.net/cf_vods/dgeft87wbj63p/ce4ddf3095472cde00cd_zzzztopper_45725106652_1657299521//thumb/thumb0-%{width}x%{height}.jpg",
+      "viewable": "public",
+      "view_count": 395246,
+      "language": "en",
+      "type": "highlight",
+      "duration": "26m14s",
+      "muted_segments": null
+    },
+    . . .
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MTN9fQ"
+  }
+}
+```
+
+### Getting videos by game
+
+To get videos that captured playing a specific game, set the game_id query parameter to the ID of the game whose videos you want to get. Because the number of videos that the request might return could be large, the API limits the results to about 500 videos.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/videos?game_id=888777666' \
+-H 'Authorization: Bearer ohzjccugqczn10eau1pfophkpv' \
+-H 'Client-Id: hof5gwx0su6owfnyan9c87zr6t'
+```
+
+By default, the API returns the videos in descending order by when they were created (latest video first). To change the order, use the sort query parameter. To return the list by time (default), set sort to time. To sort the results in descending order by the number of views, set sort to views. To return the list in descending order by the video with the biggest gains in viewership, set sort to trending.
+
+The other optional query parameters that you may specify are type, language, and period. The type parameter lets you filter the list for only VODs, highlights, or uploads. To filter the list by VODs, set type to archive; to filter the list by highlights, set type to highlight; and to filter the list by videos that were uploaded by a broadcaster, set type to upload. By default, the results include all video types.
+
+The language query parameter lets you filter the results by the language that the video’s owner broadcasts in. For example, to get videos that were broadcast in German, set this parameter to the ISO 639-1 two-letter code for German (i.e., DE). For a list of supported languages, see Supported Stream Language. For languages not in the list of supported languages, use “other”.
+
+The period filter filters the list of videos by when they were published. For example, you can use it to get videos that were published in the last day, week, or month.
+
+The following example gets highlights of the League of Legends game that was played within the last day by broadcasters that broadcast in German, and sorts the results in descending order by most viewed.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/videos?game_id=21779&period=day&type=highlight&language=de&sort=views' \
+-H 'Authorization: Bearer ohzjccugqcz1wnmj10eau1pfophkpv' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyan9c87zr6t'
+```
+
+Here’s what the response looks like:
+
+```json
+{
+  "data": [
+    {
+    "id": "4445566",
+    "stream_id": "1",
+    "user_id": "87651234",
+    "user_login": "coolio",
+    "user_name": "Coolio",
+    "title": "Epischer Kampf für die Ewigkeit",
+    "description": "",
+    "created_at": "2022-08-01T17:11:52Z",
+    "published_at": "2022-08-01T17:11:52Z",
+    "url": "https://www.twitch.tv/videos/4445566",
+    "thumbnail_url": "https://static-cdn.jtvnw.net/cf_vods/dgeft87wbj63p/f5f4f11ee38ec9ffcfc6_autophil_81311763389_8358981495//thumb/thumb11223344-%{width}x%{height}.jpg",
+    "viewable": "public",
+    "view_count": 6,
+    "language": "de",
+    "type": "highlight",
+    "duration": "30m54s",
+    "muted_segments": null
+    }
+    . . .
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6MTN9fQ"
+  }
+}
+```
+
+## Deleting videos
+
+Twitch automatically deletes VODs after 14 days for normal broadcasters and 60 days for all others like partners. Highlights and uploads don’t expire. Read more
+
+Your app can let broadcasters delete any of their videos (VODs, highlights, or uploads) by calling the Delete Videos API. The API requires a user access token that includes the **channel:manage:videos** scope. To delete a video, set the id query parameter to the video’s ID. To get a video’s ID, see Getting videos.
+
+You may delete a maximum of five videos at a time. To specify multiple IDs, repeat the id parameter for each video you want to delete. For example, `id=123&id=456&id=789`. If the user doesn’t have permission to delete one of the videos in the list, none of the videos are deleted.
+
+```bash
+curl -X DELETE 'https://api.twitch.tv/helix/videos?id=1535513785' \
+-H 'Authorization: Bearer mf1g5iz0ki7x72ecbenzlf8t08x' \
+-H 'Client-Id: hof5gwx0sufnys0nyan9c87zr6t'
+```
+
+If the request succeeds, the response contains the IDs of the videos that were deleted.
+
+```json
+{
+  "data": [
+    "1535513785"
+  ]
+}
+```
+
+If the video doesn’t exist or doesn’t belong to the broadcaster, or the token doesn’t include the correct scope, the request returns an HTTP 401 Unauthorized status code.

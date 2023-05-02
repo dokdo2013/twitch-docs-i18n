@@ -1,0 +1,368 @@
+# Predictions
+
+Predictions are a great way for broadcasters to involve their community in a little light rivalry by asking viewers to predict the outcome of an event like Will I make grandmaster today?. Viewers use their Channel Points to back one of the outcomes with the chance to win points from the pool if their guess is correct.
+
+You can provide from 2 to 10 outcomes for viewers to choose from. The outcomes can be binary choices for questions like Will I set a PB lap time? or non-binary for questions like Which level will I reach today?.
+
+Broadcasters can start a prediction at any time but may run only one prediction at a time. The broadcaster’s moderators and editors may create and manage the broadcaster’s predictions.
+
+Because predictions may result in your viewers generating a high amount of Channel Points quickly, you should review your custom rewards and reward pricing before running a prediction.
+
+Running predictions is available to partners and affiliates only. Read more.
+
+## Creating a prediction
+
+To create a prediction, send a POST request to the Create Prediction endpoint. The endpoint requires a user access token with scope **channel:manage:predictions**. This scope works for creating, ending, and getting predictions.
+
+The following POST shows a prediction that asks the viewers to predict which level the broadcaster will reach today. The prediction runs for 5 minutes.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/predictions' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575' \
+-H 'Content-Type: application/json' \
+-d '{"broadcaster_id":"123456","title":"What level will I reach today?","outcomes":[{"title":"Level 1"},{"title":"Level 2"},{"title":"Level 3"},{"title":"Level 4"}],"prediction_window":300}'
+```
+
+If the request is successful, the prediction is displayed in the broadcaster’s chat.
+
+![https://dev.twitch.tv/docs/assets/uploads/prediction.jpeg](https://dev.twitch.tv/docs/assets/uploads/prediction.jpeg)
+
+The POST’s response contains the prediction’s ID (see the response’s `id` field), which you use to identify the winning outcome or to get the current state of the prediction. Because the prediction specifies more than two outcomes, the color for each outcome is blue. If you specify only two outcomes, one outcome is blue and the other is pink.
+
+```json
+{
+  "data": [
+    {
+      "id": "5921de75-e302-42d4-89a3-a858604da590",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "What level will I reach today?",
+      "winning_outcome_id": null,
+      "outcomes": [
+        {
+          "id": "db70c764-9b4b-4036-87da-154720a648d4",
+          "title": "Level 1",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "81e995f6-b3ac-4eba-84c0-7e5bff53a25d",
+          "title": "Level 2",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "852378b7-ff5c-4b4e-b54d-615459b35574",
+          "title": "Level 3",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "ce597276-7b58-4aaf-98cb-a833cd40a316",
+          "title": "Level 4",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        }
+      ],
+      "prediction_window": 300,
+      "status": "ACTIVE",
+      "created_at": "2022-06-27T16:22:15.478726636Z",
+      "ended_at": null,
+      "locked_at": null
+    }
+  ]
+}
+```
+
+## Ending a prediction
+
+The prediction runs for the length of time that you specified in the `prediction_window` field when you created the prediction. In the above example, the prediction gives viewers 5 minutes to predict what level the broadcaster will reach. After the broadcaster finishes the game, they must identify the winning outcome. Points are only allocated to viewers if you select a winning outcome. If you don’t select a winning outcome within 24 hours, all points are returned to the viewers. Also, you can’t run another prediction until you select an outcome or cancel the prediction.
+
+### Selecting the winning outcome
+
+To select the winning outcome, send a PATCH request to the End Prediction endpoint.
+
+1. Set the id query parameter to the prediction’s ID (the Create Prediction response contains the ID).
+2. Set the status query parameter to RESOLVED.
+3. Set the winning_outcome_id query parameter to the ID of the winning outcome. Each **Outcome** object contains an `id` field.
+
+```bash
+curl -X PATCH 'https://api.twitch.tv/helix/predictions?broadcaster_id=123456&id=5921de75-e302-42d4-89a3-a858604da590&status=RESOLVED&winning_outcome_id=852378b7-ff5c-4b4e-b54d-615459b35574' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+After selecting the winning outcome, the prediction’s results are displayed in chat for a limited time.
+
+The following example shows the response after resolving the prediction. The `winning_outcome_id` field identifies the winning outcome. The **Outcome** object shows how many Channel Points were used to vote for the outcome and it identifies the user that voted for the outcome with the most Channel Points.
+
+```json
+{
+  "data": [
+    {
+      "id": "5921de75-e302-42d4-89a3-a858604da590",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "What level will I reach today?",
+      "winning_outcome_id": "852378b7-ff5c-4b4e-b54d-615459b35574",
+      "outcomes": [
+        {
+          "id": "db70c764-9b4b-4036-87da-154720a648d4",
+          "title": "Level 1",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "81e995f6-b3ac-4eba-84c0-7e5bff53a25d",
+          "title": "Level 2",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "852378b7-ff5c-4b4e-b54d-615459b35574",
+          "title": "Level 3",
+          "users": 1,
+          "channel_points": 1,
+          "top_predictors": [
+            {
+              "user_id": "654321",
+              "user_login": "panpanpan",
+              "user_name": "panpanpan",
+              "channel_points_used": 1,
+              "channel_points_won": 1
+            }
+          ],
+          "color": "BLUE"
+        },
+        {
+          "id": "ce597276-7b58-4aaf-98cb-a833cd40a316",
+          "title": "Level 4",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        }
+      ],
+      "prediction_window": 300,
+      "status": "RESOLVED",
+      "created_at": "2022-06-27T16:22:15.478726636Z",
+      "ended_at": "2022-06-27T16:28:04.625329479Z",
+      "locked_at": "2022-06-27T16:26:05.029735601Z"
+    }
+  ],
+  "pagination": {}
+}
+```
+
+### Canceling or locking the prediction
+
+If you need to cancel a prediction or end the prediction early, send a PATCH request to the End Prediction endpoint.
+
+1. Set the id query parameter to the prediction’s ID (the Create Prediction response contains the ID).
+2. Set the status query parameter to CANCELED or LOCKED. Set to CANCELED if you want to cancel the prediction and give everyone back their Channel Points. Set to LOCKED if you want to end the prediction early. If locked, you must still choose a winning outcome or cancel the prediction.
+
+The following PATCH shows how to cancel the prediction.
+
+```bash
+curl -X PATCH 'https://api.twitch.tv/helix/predictions?broadcaster_id=123456&id=b1a72ca6-6f58-4ff8-b526-0c0ccc50363f&status=CANCELED' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+## Getting a prediction’s current state
+
+To get a list of all predictions that the broadcaster has run in the last 90 days, send a GET request to the Get Predictions endpoint. The response returns the predictions in descending order by when they were created (with the latest prediction first). If your app only gets predictions, you’ll need an access token with the **channel:read:predictions** scope; otherwise, if you’re also creating predictions, you can use an access token with the **channel:manage:predictions** scope.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/predictions?broadcaster_id=123456' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+The following shows a partial response.
+
+```json
+{
+  "data": [
+    {
+      "id": "f6a64b42-02be-450f-9637-b22813720a57",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "What level will I reach today?",
+      "winning_outcome_id": null,
+      "outcomes": [
+        {
+          "id": "5cdf0e7a-fc1b-4562-aa62-16ce70173ea7",
+          "title": "Level 1",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "1f2c0d2d-001a-437a-a096-9672b74403c1",
+          "title": "Level 2",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "68494b90-1cbf-4a51-aa05-82b46c6fc350",
+          "title": "Level 3",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "4cdaa34d-5580-4a89-a70d-5dd1038adfc0",
+          "title": "Level 4",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        }
+      ],
+      "prediction_window": 200,
+      "status": "ACTIVE",
+      "created_at": "2022-06-27T19:29:55.034259659Z",
+      "ended_at": null,
+      "locked_at": null
+    },
+    . . .
+    {
+      "id": "6f7b8113-add1-4d20-8700-534e9bab2c38",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "Will I set a PB lap time?",
+      "winning_outcome_id": null,
+      "outcomes": [
+        {
+          "id": "fac2e75c-6e8c-47ea-8e26-74cffb1067da",
+          "title": "Absolutely",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "b43a57cb-4ec1-4a6d-b8a6-b8a7cd2704de",
+          "title": "Not a chance",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "PINK"
+        }
+      ],
+      "prediction_window": 60,
+      "status": "CANCELED",
+      "created_at": "2022-05-17T18:07:03.222132487Z",
+      "ended_at": "2022-05-17T19:33:19.30761015Z",
+      "locked_at": "2022-05-17T18:08:03.354254258Z"
+    }
+  ],
+  "pagination": {}
+}
+```
+
+To get a specific prediction, use the id query parameter. You may specify a maximum of 100 IDs.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/predictions?broadcaster_id=123456&id=5921de75-e302-42d4-89a3-a858604da590' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+The following response shows the single prediction that you requested. The predictions’s status is RESOLVED which means the prediction is over and an outcome was selected (see the Level 3 outcome).
+
+```json
+{
+  "data": [
+    {
+      "id": "5921de75-e302-42d4-89a3-a858604da590",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "What level will I reach today?",
+      "winning_outcome_id": "852378b7-ff5c-4b4e-b54d-615459b35574",
+      "outcomes": [
+        {
+          "id": "db70c764-9b4b-4036-87da-154720a648d4",
+          "title": "Level 1",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "81e995f6-b3ac-4eba-84c0-7e5bff53a25d",
+          "title": "Level 2",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        },
+        {
+          "id": "852378b7-ff5c-4b4e-b54d-615459b35574",
+          "title": "Level 3",
+          "users": 1,
+          "channel_points": 1,
+          "top_predictors": [
+            {
+              "user_id": "654321",
+              "user_login": "panpanpan",
+              "user_name": "panpanpan",
+              "channel_points_used": 1,
+              "channel_points_won": 1
+            }
+          ],
+          "color": "BLUE"
+        },
+        {
+          "id": "ce597276-7b58-4aaf-98cb-a833cd40a316",
+          "title": "Level 4",
+          "users": 0,
+          "channel_points": 0,
+          "top_predictors": null,
+          "color": "BLUE"
+        }
+      ],
+      "prediction_window": 300,
+      "status": "RESOLVED",
+      "created_at": "2022-06-27T16:22:15.478726636Z",
+      "ended_at": "2022-06-27T16:28:04.625329479Z",
+      "locked_at": "2022-06-27T16:26:05.029735601Z"
+    }
+  ],
+  "pagination": {}
+}
+```
+
+## Get notified when a prediction’s state changes
+
+To get notified when someone votes in the broadcaster’s prediction, subscribe to the Channel Prediction Progress event.
+
+You can also subscribe to the following events to get notified when the broadcaster starts or ends a prediction. Use the Prediction End event to display the final prediction results.
+
+- Channel Prediction Begin
+- Channel Prediction End
+
+For information about how to subscribe to events, see Managing Event Subscriptions.

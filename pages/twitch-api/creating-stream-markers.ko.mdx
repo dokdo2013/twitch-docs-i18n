@@ -1,0 +1,116 @@
+# Stream Markers
+
+Stream Markers let you and your editors mark points in your live broadcast that you think could be used in a highlight reel using Twitch’s Highlighter feature. The markers are shown on the Highlighter’s timeline at the point of the stream that you created them. Read more
+
+## Creating Markers
+
+To create a stream marker, use the Create Stream Marker API. The request requires a user access token that includes the **channel:manage:broadcast** scope. The body of the request specifies the ID of the broadcaster whose stream you want to mark. To create a marker, the broadcaster must be streaming live.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/streams/markers' \
+-H 'Authorization: Bearer raayetjqpx1gfwu1h8iivy5cqfs1' \
+-H 'Client-Id: hof5gwx0su6owfs0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"user_id":123456}'
+```
+
+The following example shows the request’s response. The `position_seconds` field marks the offset of the marker from the beginning of the stream. Because the request didn’t specify a description of the marker, the `description` field contains an empty string.
+
+```json
+{
+  "data": [
+    {
+      "id": "636c75f397acee3aef1cfcb8dbcd28e7",
+      "created_at": "2022-07-18T17:13:20.505877606Z",
+      "position_seconds": 99,
+      "description": ""
+    }
+  ]
+}
+```
+
+### Viewing your markers in the Highlighter
+
+By default, the Highlighter selects roughly the middle two-thirds of the stream to highlight. Markers are shown as yellow if they fall within a highlighted segment; otherwise, they’re shown as gray. If a marker is gray and you create a highlight segment that spans the marker or extend a highlighted area beyond the marker, it turns yellow.
+
+### Setting optional parameters
+
+The request may also include an optional short description to help remind you why you created the marker. The description is limited to a maximum of 140 characters.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/streams/markers' \
+-H 'Authorization: Bearer raayetjqpx1gfwu1h8iivy5cqfs1' \
+-H 'Client-Id: hof5gwx0su6owfs0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"user_id":123456,"description":"killer retort"}'
+```
+
+### Possible issues you can run into
+
+You may only create markers:
+
+- If the broadcaster is streaming live.
+- If the broadcaster has enabled the ability to store past broadcasts. See **Store past broadcasts** under **Settings**, **Stream**, **VOD Settings** in your **Creator Dashboard**.
+- If the broadcast is not a premiere (a live, first-viewing event that combines uploaded videos with live chat).
+- If the broadcast is not a rerun of a past broadcast.
+
+## Getting markers
+
+To get your markers, use the Get Stream Markers API. You can get markers from your most recent on-demand video (VOD) or from a specific VOD. The request requires a user access token that includes the **channel:manage:broadcast** or **channel:read:broadcast** scope.
+
+### Getting markers from your most recent VOD
+
+To get markers from your most recent VOD, set the user_id query parameter to the broadcaster’s ID.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/streams/markers?user_id=123456' \
+-H 'Authorization: Bearer raayetjqpx1gfwu1h8iivy5cqfs1' \
+-H 'Client-Id: hof5gwx0su6owfs0nyan9c87zr6t'
+```
+
+The following example shows the request’s response. The `videos` field contains a single video, which is your most recent VOD. The `markers` field contains the list of markers you created. In this example, only one marker was created. The `position_seconds` field is the offset from the beginning of the video to the marker.
+
+```json
+{
+  "data": [
+    {
+      "user_id": "123456",
+      "user_name": "fun2bfun",
+      "user_login": "fun2bfun",
+      "videos": [
+        {
+          "video_id": "1537415906",
+          "markers": [
+            {
+              "id": "29b23f883d0c79b1e1787aeef3b0d5be",
+              "created_at": "2022-07-20T15:08:27.527678964Z",
+              "description": "",
+              "position_seconds": 114,
+              "URL": "https://twitch.tv/fun2bfun/manager/highlighter/1537415906?t=1m114s"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pagination": {}
+}
+```
+
+If you don’t have any VODs, the request returns 404 Not Found.
+
+### Getting markers from a specific VOD
+
+To get markers from a specific VOD, set the video_id query parameter to the VOD’s ID. To get a video’s ID, see the Get Videos API.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/streams/markers?video_id=9876543' \
+-H 'Authorization: Bearer raayetjqpx1gfwu1h8iivy5cqfs1' \
+-H 'Client-Id: hof5gwx0su6owfs0nyan9c87zr6t'
+```
+
+### Setting optional parameters
+
+The API provides the optional first and after query parameters used for pagination. To learn how to page through the results, see Pagination.
+
+**NOTE**: Pagination for Get Stream Markers differs from pagination for the other parts of the Twitch API. For most of the APIs you’re paging the objects in the `data` array, but with this API, you’re paging the objects in the `markers` array.

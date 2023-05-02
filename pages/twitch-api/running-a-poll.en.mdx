@@ -1,0 +1,209 @@
+# Polls
+
+Polls are a great way for broadcasters to get feedback from their community. For example, a broadcaster can ask their viewers which game they should play next. Polls can provide from 2 to 5 choices for viewers to choose from. Viewers can vote once for free, but depending on how the poll is configured, viewers can spend Channel Points to vote multiple times (for the same choice or different choices).
+
+Broadcasters can start a poll at any time but may run only one poll at a time. The broadcaster’s moderators or editors can create or manage the broadcaster’s polls.
+
+Running polls is available to partners and affiliates only. Read more.
+
+## Creating a poll
+
+To create a poll, send a POST request to the Create Poll endpoint. The endpoint requires a user access token with scope **channel:manage:polls**. This scope works for creating, ending, and getting polls.
+
+The following POST shows a poll that asks what time the broadcaster should stream on Tuesday. The poll runs for 5 minutes.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/polls' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575' \
+-H 'Content-Type: application/json' \
+-d '{"broadcaster_id":"123456","title":"Streaming next Tuesday. Which time works best for you?","choices":[{"title":"9AM"},{"title":"10AM"},{"title":"7PM"},{"title":"8PM"},{"title":"9PM"}],"duration":300}'
+```
+
+In the above poll everyone gets a single vote. To let viewers cast more than one vote, enable voting with Channel Points. If enabled, viewers may cast as many votes as they want but each additional vote costs them Channel Points (to cast additional votes, the viewers must own Channel Points).
+
+The following POST shows enabling Channel Points voting where each additional vote costs the viewer 200 Channel Points.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/polls' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575' \
+-H 'Content-Type: application/json' \
+-d '{"broadcaster_id":"123456","title":"Streaming next Tuesday. Which time works best for you?","choices":[{"title":"9AM"},{"title":"10AM"},{"title":"7PM"},{"title":"8PM"},{"title":"9PM"}],"duration":300,"channel_points_voting_enabled":true,"channel_points_per_vote":200}'
+```
+
+If the request is successful, the poll is displayed in the broadcaster’s chat.
+
+![https://dev.twitch.tv/docs/assets/uploads/poll.jpeg](https://dev.twitch.tv/docs/assets/uploads/poll.jpeg)
+
+The POST’s response contains the poll’s ID (see the response’s `id` field), which you can use to end the poll early or get the current state of the poll.
+
+## Ending a poll
+
+The poll runs for the length of time that you specified in the `duration` field when you created the poll. In the above example, the poll runs for 5 minutes. If you want to end the poll early, send a PATCH request to the End Poll endpoint.
+
+To end the poll:
+
+1. Set the id query parameter to the poll’s ID (the Create Poll response contains the ID).
+2. Set the status query parameter to TERMINATED or ARCHIVED. Set to TERMINATED if you want to end the poll and display the results of the poll in chat; otherwise, set to ARCHIVED to end the poll and remove it from chat. If TERMINATED, the results are displayed in chat for a limited time, afterwhich, the poll’s status changes to ARCHIVED.
+
+The following PATCH shows how to end a poll and display the result in chat.
+
+```bash
+curl -X PATCH 'https://api.twitch.tv/helix/polls?broadcaster_id=123456&id=b308bea0-b108-4c77-88bc-e8f234e72d2e&status=TERMINATED' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+## Getting a poll’s current state
+
+To get a list of all polls that the broadcaster has run in the last 90 days, send a GET request to the Get Polls endpoint. The response returns the polls in descending order by when they were created (with the latest poll first). If your app only gets polls (and doesn’t create them), you’ll need an access token with the **channel:read:polls** scope; otherwise, if you’re also creating polls, you can use an access token with the **channel:manage:polls** scope.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/polls?broadcaster_id=123456' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+The following shows a partial response.
+
+```json
+{
+  "data": [
+    {
+      "id": "84c8d008-5f57-4583-b7fa-b824e15b0655",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "Streaming next Tuesday. Which time works best for you?",
+      "choices": [
+        {
+          "id": "0214c236-f36d-49ca-a019-0f78329aaa60",
+          "title": "9AM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "975c4906-278d-468c-9706-4e33a7a35adc",
+          "title": "10AM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "8b04fd83-37f9-4d60-89cb-d8b54be7c461",
+          "title": "7PM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "93b42451-92d4-420e-ae0e-8219f440b9d0",
+          "title": "8PM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "807a3550-463b-45d6-8b5c-bb94095ccb37",
+          "title": "10PM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        }
+      ],
+      "bits_voting_enabled": false,
+      "bits_per_vote": 0,
+      "channel_points_voting_enabled": true,
+      "channel_points_per_vote": 20,
+      "status": "ARCHIVED",
+      "duration": 300,
+      "started_at": "2022-06-22T16:15:29.899952649Z",
+      "ended_at": "2022-06-22T16:20:29.899952649Z"
+    },
+    . . .
+  ],
+  "pagination": {}
+}
+```
+
+To get a specific poll, use the id query parameter. You may specify a maximum of 100 IDs.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/polls?broadcaster_id=123456&id=86efb61a-dae2-4b66-9e93-48c1836bf748' \
+-H 'Authorization: Bearer vpx9etxs8bbii29krls1ljai1kdr' \
+-H 'Client-Id: dt4z41sa8uexdkjvt7uu9jjqm575'
+```
+
+The following response shows the single poll that you requested. The poll’s status is ACTIVE which means the poll is still running, and it looks like someone spent channel points to cast an additional vote.
+
+```json
+{
+  "data": [
+    {
+      "id": "86efb61a-dae2-4b66-9e93-48c1836bf748",
+      "broadcaster_id": "123456",
+      "broadcaster_name": "smartysmartmaster",
+      "broadcaster_login": "smartysmartmaster",
+      "title": "Streaming next Tuesday. Which time works best for you?",
+      "choices": [
+        {
+          "id": "7815e46b-d886-47fc-8962-0f6893e08b3d",
+          "title": "9AM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "5b6f2aed-1463-4f82-a62e-6da88c8141f5",
+          "title": "10AM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "bdd2de39-30f3-417d-893a-806c2b3e216c",
+          "title": "7PM",
+          "votes": 2,
+          "channel_points_votes": 1,
+          "bits_votes": 0
+        },
+        {
+          "id": "88ed6e6f-fb92-4425-968c-1560ca09588a",
+          "title": "8PM",
+          "votes": 1,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        },
+        {
+          "id": "75fd6a0d-f205-4770-ae07-ea4abae59ffb",
+          "title": "10PM",
+          "votes": 0,
+          "channel_points_votes": 0,
+          "bits_votes": 0
+        }
+      ],
+      "bits_voting_enabled": false,
+      "bits_per_vote": 0,
+      "channel_points_voting_enabled": true,
+      "channel_points_per_vote": 2,
+      "status": "ACTIVE",
+      "duration": 300,
+      "started_at": "2022-06-22T17:43:36.272090996Z"
+    }
+  ],
+  "pagination": {}
+}
+```
+
+## Get notified when a poll’s state changes
+
+To get notified when someone votes in the broadcaster’s poll, subscribe to the Channel Poll Progress event.
+
+You can also subscribe to the following events to get notified when the broadcaster starts or ends a poll. Use the Poll End event to display the final poll results.
+
+- Channel Poll Begin
+- Channel Poll End
+
+For information about how to subscribe to events, see Managing Event Subscriptions.
