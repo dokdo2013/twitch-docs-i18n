@@ -1,0 +1,27 @@
+# 방송 개요
+
+트위치에서는 수 천명의 스트리머가 방송을 진행하고 있습니다. 스트리머는 다음과 같은 여러 도구를 사용하여 Twitch로 방송을 송출합니다.
+
+- 일반적으로 소프트웨어 형태로 제공되는 [Twitch Studio](https://www.twitch.tv/broadcast/studio), Streamlabs, OBS Studio, Xsplit와 같은 스트리밍 인코더.
+- Xbox One, Xbox 시리즈 S|X, 플레이스테이션 4, 플레이스테이션 5와 같은 게이밍 콘솔.
+- 하드웨어 비디오 인코더
+
+각 도구들은 스트리머의 게임과 카메라로부터 캡쳐된 영상 신호를 RTMP(Real-Time Messaging Protocol)를 통해 트위치로 보냅니다.
+
+방송 송출의 첫 번째 지점은 '트위치 송출 시스템 (Twitch ingesting subsystem)'입니다. 방송은 이 시스템을 통해 트위치로 들어오고, 인증과 등록 과정을 거쳐 시청자들이 시청할 수 있도록 준비됩니다. 방송을 송출할 서버를 선택할 수도 있습니다. 많은 서버들이 있으며, 각각은 PoP (Point of Presence, 연결점)에 존재합니다. (PoP는 코로케이션 시설에 있는 중소규모 서버로, 일반적으로 주요 인터넷 연결 지점에 위치합니다.)
+
+## 방송 URL과 스트림 키
+
+각 방송은 다음과 같은 형식의 RTMP URL을 사용합니다.
+
+`rtmp://<송출-서버>/app/<스트림-키>[?bandwidth_test=true]`
+
+- `<송출-서버>` 어떤 트위치 서버가 이 방송을 수신하는지 식별합니다. 예시 : sfo.contribute.live-video.net.
+
+- `<스트림-키>` (인증 키라고도 함) 이 스트림을 식별하는 고유값입니다. 스트림 키는 트위치에서 할당합니다. 스트리머는 www.twitch.tv 의 스트리머 대시보드 또는 [스트림 키 가져오기](/ko/twitch-api/reference/get-stream-key) API를 통해 키를 얻을 수 있습니다.
+
+- `<bandwidth_test=true>` 는 선택 쿼리스트링 파라미터로, 실시간 시청은 불가능합니다. 대역폭 상태를 확인하기 위해 사용됩니다.
+
+예시: `rtmp://sfo.contribute.live-video.net/app/live_user_123456789?bandwidth_test=true`
+
+방송 가이드라인과 코덱에 대한 추천 사항에 대해서는 [https://stream.twitch.tv](https://stream.twitch.tv)를 참조하십시오.

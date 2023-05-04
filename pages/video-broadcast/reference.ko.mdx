@@ -1,0 +1,82 @@
+# 레퍼런스
+
+## 송출 서버 조회
+
+송출 서버 조회는 Twitch로 라이브 비디오를 송출하기 위한 엔드포인트 목록을 반환합니다.
+
+**URL**
+
+`GET https://ingest.twitch.tv/ingests`
+
+**인증**
+
+없음
+
+**응답 값**
+
+| 매개변수 | 타입 | 설명 |
+| --- | --- | --- |
+| `ingests` | array | 송출 서버 객체의 배열입니다. |
+| `_id` | integer | 송출 서버의 순번입니다. |
+| `availability` | float | 내부적으로 사용되는 예약 값입니다. |
+| `default` | boolean | 내부적으로 사용되는 예약 값입니다. |
+| `name` | string | 송출 서버의 이름입니다. |
+| `url_template` | string | 송출 서버의 RTMP URL 템플릿입니다. |
+| `priority` | integer | 내부적으로 사용되는 예약 값입니다. |
+
+### 예제
+
+**요청 예시**
+
+```bash
+curl -X GET 'https://ingest.twitch.tv/ingests' 
+```
+
+**응답 예시**
+
+```json
+​​​​​​{
+    "ingests": [
+        {
+            "_id": 0,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Atlanta, GA",
+            "url_template": "rtmp://atl.contribute.video.net/app/{stream_key}",
+            "priority": 0
+        },
+        {
+            "_id": 1,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Ashburn, VA (5)",
+            "url_template": "rtmp://iad05.contribute.video.net/app/{stream_key}",
+            "priority": 1
+        },
+        {
+            "_id": 2,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Ashburn, VA (3)",
+            "url_template": "rtmp://iad03.contribute.video.net/app/{stream_key}",
+            "priority": 2
+        },
+        {
+            "_id": 3,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Chicago, IL (2)",
+            "url_template": "rtmp://ord02.contribute.video.net/app/{stream_key}",
+            "priority": 3
+        },
+        {
+            "_id": 4,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Chicago, IL (3)",
+            "url_template": "rtmp://ord03.contribute.video.net/app/{stream_key}",
+            "priority": 4
+        }
+    ]
+}
+```
