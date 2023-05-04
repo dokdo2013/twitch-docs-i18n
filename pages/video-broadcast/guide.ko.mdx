@@ -1,0 +1,29 @@
+# Video Broadcasting Overview
+
+There are thousands of Twitch broadcasters. A broadcaster sends a video stream to Twitch using any of several tools:
+
+- Streaming encoder, normally a software implementation like [Twitch Studio](https://www.twitch.tv/broadcast/studio), Streamlabs, OBS Studio, or Xsplit.
+- Consoles like Xbox One, Xbox Series S|X, Playstation 4, Playstation 5.
+- Hardware video encoder
+
+The tool sends a video signal captured from the broadcaster’s game and cameras, through the open Internet, into Twitch using *Real-Time Messaging Protocol (RTMP)*.
+
+The first stop for a broadcast stream is the Twitch ingesting subsystem, where streams enter Twitch and are authorized and registered, then prepared for viewers. You select an ingest server to receive your stream. There are many ingest servers, each living in a PoP (Point of Presence, a small-to-medium deployment of servers in a co-location facility, normally at a major internet exchange point).
+
+## Broadcast URLs and Stream Keys
+
+Each broadcast uses an RTMP URL with this format:
+
+`rtmp://<ingest-server>/app/<stream-key>[?bandwidth_test=true]`
+
+Where:
+
+- `<ingest-server>` identifies a specific Twitch server that receives this broadcast stream; e.g., sfo.contribute.live-video.net.
+
+- `<stream-key>` (also known as authorization key) uniquely identifies this stream. Stream keys are assigned by Twitch. Broadcasters can retrieve the keys from the broadcaster dashboard on www.twitch.tv or through the [Get Stream Key](/twitch-api/reference/get-stream-key) API.
+
+- `<bandwidth_test=true>` is an optional query-string parameter that disables live viewing of the stream. It is used to verify bandwidth health.
+
+Example: `rtmp://sfo.contribute.live-video.net/app/live_user_123456789?bandwidth_test=true`
+
+For more detailed recommendations on broadcasting guidelines and codecs, please consult [https://stream.twitch.tv](https://stream.twitch.tv).

@@ -1,0 +1,82 @@
+# Reference
+
+## Get Ingest Servers
+
+Get Ingest Servers returns a list of endpoints for ingesting live video into Twitch.
+
+**URL**
+
+`GET https://ingest.twitch.tv/ingests`
+
+**Authentication**
+
+None
+
+**Return Values**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `ingests` | array | Array of Ingest Server objects. |
+| `_id` | integer | Sequential identifier of ingest server. |
+| `availability` | float | Reserved for internal use. |
+| `default` | boolean | Reserved for internal use. |
+| `name` | string | Descriptive name of ingest server. |
+| `url_template` | string | RTMP URL template for ingest server |
+| `priority` | integer | Reserved for internal use. |
+
+### Example
+
+**Example Request**
+
+```bash
+curl -X GET 'https://ingest.twitch.tv/ingests' 
+```
+
+**Example Response**
+
+```json
+​​​​​​{
+    "ingests": [
+        {
+            "_id": 0,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Atlanta, GA",
+            "url_template": "rtmp://atl.contribute.video.net/app/{stream_key}",
+            "priority": 0
+        },
+        {
+            "_id": 1,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Ashburn, VA (5)",
+            "url_template": "rtmp://iad05.contribute.video.net/app/{stream_key}",
+            "priority": 1
+        },
+        {
+            "_id": 2,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Ashburn, VA (3)",
+            "url_template": "rtmp://iad03.contribute.video.net/app/{stream_key}",
+            "priority": 2
+        },
+        {
+            "_id": 3,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Chicago, IL (2)",
+            "url_template": "rtmp://ord02.contribute.video.net/app/{stream_key}",
+            "priority": 3
+        },
+        {
+            "_id": 4,
+            "availability": 1.0,
+            "default": false,
+            "name": "US East: Chicago, IL (3)",
+            "url_template": "rtmp://ord03.contribute.video.net/app/{stream_key}",
+            "priority": 4
+        }
+    ]
+}
+```
