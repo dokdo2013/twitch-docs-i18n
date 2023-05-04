@@ -1,59 +1,59 @@
-# Embedding Video and Clips
+# 비디오 & 클립 임베딩
 
-You can embed live streams, video on demand (VOD), and clips in a website. Embedded video windows must be at least 400x300 pixels.
+라이브 방송, VOD, 그리고 클립을 웹사이트에 임베드할 수 있습니다. 임베드된 비디오 창은 최소 400x300 픽셀이어야 합니다.
 
-There are three types of VODs:
+VOD에는 세 가지 종류가 있습니다:
 
-- Past broadcasts are created automatically from a live stream.
-- Highlights can be created by broadcasters from past broadcasts.
-- Uploads are external videos that are added to Twitch using the Video Uploads API or the Video Manager.
+- 지난 방송은 라이브 방송을 통해 자동으로 생성됩니다.
+- 하이라이트는 지난 방송으로부터 스트리머가 생성합니다.
+- 업로드는 비디오 업로드 API나 비디오 관리자를 사용하여 트위치에 추가된 외부 비디오입니다.
 
-This guide discusses three techniques for embedding video and clips
+다음 가이드는 비디오와 클립을 임베드하는 세 가지 기술에 대해 설명합니다:
 
-- Embedding live streams and VODs in a [non-interactive frame](/embedding-twitch/video-and-clips#non-interactive-inline-frames-for-live-streams-and-vods).
-- Embedding live streams and VODs in an [interactive iframe](/embedding-twitch/video-and-clips#interactive-frames-for-live-streams-and-vods).
-- Embedding clips in a [non-interactive frame](/embedding-twitch/video-and-clips#non-interactive-iframes-for-clips).
+- 라이브 방송과 VOD를 [IFrame](/ko/embedding-twitch/video-and-clips#iframe%EC%9C%BC%EB%A1%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C-%EB%B0%A9%EC%86%A1%EA%B3%BC-vod-%EC%9E%84%EB%B2%A0%EB%93%9C%ED%95%98%EA%B8%B0) 으로 임베드하기.
+- 라이브 방송과 VOD를 [프로그래밍 방식](/ko/embedding-twitch/video-and-clips#%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EB%B0%A9%EC%8B%9D%EC%9C%BC%EB%A1%9C-%EB%9D%BC%EC%9D%B4%EB%B8%8C-%EB%B0%A9%EC%86%A1%EA%B3%BC-vod-%EC%9E%84%EB%B2%A0%EB%93%9C%ED%95%98%EA%B8%B0) 으로 임베드하기.
+- 클립을 [Iframe](/ko/embedding-twitch/video-and-clips#iframe%EC%9C%BC%EB%A1%9C-%ED%81%B4%EB%A6%BD-%EC%9E%84%EB%B2%A0%EB%93%9C%ED%95%98%EA%B8%B0) 으로 임베드하기.
 
-For more information, see [Video on Demand](https://help.twitch.tv/s/article/video-on-demand) and [How to Use Clips](https://help.twitch.tv/s/article/how-to-use-clips).
+더 알아보고싶다면, [VOD](https://help.twitch.tv/s/article/video-on-demand) 와 [어떻게 클립을 생성하나요](https://help.twitch.tv/s/article/how-to-use-clips) 문서를 읽어보세요.
 
-## Non-Interactive Inline Frames for Live Streams and VODs
+## IFrame으로 라이브 방송과 VOD 임베드하기
 
 ```html
 <iframe
-    src="https://player.twitch.tv/?<channel, video, or collection>&parent=streamernews.example.com"
-    height="<height>"
-    width="<width>"
+    src="https://player.twitch.tv/?<채널, 영상, 또는 컬렉션>&parent=streamernews.example.com"
+    height="<높이>"
+    width="<너비>"
     allowfullscreen>
 </iframe>
 ```
 
-Iframe Attributes
+Iframe 속성
 
-These attributes are defined in the IFrame element. The Twitch player can not set or modify them.
+IFrame 엘리먼트를 정의하기 위해 다음 속성을 사용합니다. 트위치 플레이어는 이 속성들을 설정하거나 수정할 수 없습니다.
 
-| Name	| Type	| Description |
+| 이름 | 타입 | 설명 |
 | --- | --- | --- |
-| `allowfullscreen` |	boolean |	A boolean attribute set by inclusion. In other words, including the attribute enables fullscreen viewing while excluding the attribute ensures fullscreen viewing is not allowed. |
-| `height` |	number or string |	Height of the embedded window, in pixels. This can be expressed as a percentage, by passing a string like `100%`. Recommended minimum: 300 |
-| `parent` |	string |	**(required)** Domain(s) that will be embedding Twitch. You must have one parent key for each domain your site uses. |
-| `src` |	string |	The iframe `src` URL string should be https://player.twitch.tv/ with one of these required query string parameters:<br /><br /> `channel` – (string) Name of the channel, for a live stream.<br /><br />`video` – (string) Video ID (for past broadcasts, highlights, and video uploads). In this context (the video player), the video ID must have a “v” prefix.<br /><br />`collection` - (string) Collection ID, for a collection of videos.<br /><br />If both `video` and `collection` are specified, the specified collection starts playing from the specified video. If the video is not in the collection, `collection` is ignored and the specified video is played.<br /><br />If `channel` is specified along with `video` and/or `collection`, only `channel` is used. |
-| `width` |	number or string |	Width of the embedded window, in pixels. This can be expressed as a percentage, by passing a string like `50%`. Recommended minimum: 400 |
+| `allowfullscreen` | boolean | 이 속성은 포함하기만 해도 설정됩니다. 다시 말해, 이 속성을 포함하면 전체 화면 전환이 가능하고, 이 속성을 제외하면 전체 화면 전환이 불가능합니다. |
+| `height` | number 또는 string | 임베드된 창의 높이 (픽셀 단위). 이는 `100%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 300 |
+| `parent` | string | **(필수)** 트위치를 임베드할 도메인입니다. 사이트가 사용하는 각 도메인에 대해 하나의 parent 키를 가져야 합니다. |
+| `src` | string | iframe의 `src` URL은 https://player.twitch.tv/ 와 함께 다음 쿼리스트링 파라미터 중 하나가 필요합니다:<br /><br /> `channel` - (string) 라이브 방송의 채널명.<br /><br />`video` - (string) 지난 방송, 하이라이트, 업로드된 영상의 ID. 여기서는 (비디오 플레이어에 한해) "v" 접두사를 영상 ID 앞에 붙여야 합니다.<br /><br />`collection` - (string) 영상 컬렉션의 ID.<br /><br />`video`와 `collection`이 모두 지정되면, 지정된 컬렉션의 지정된 영상부터 재생됩니다. 만일 영상이 컬렉션에 없다면, `collection` 속성의 값은 무시되고, 지정된 영상이 재생됩니다.<br /><br />만일 `channel`이 `video`와/또는 `collection`과 함께 지정되면, `channel`만 사용됩니다. |
+| `width` | number 또는 string | 임베드된 창의 너비 (픽셀 단위). 이는 `50%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 400 |
 
-Optional Query String Parameters on Iframe `src`
+Iframe의 `src` 속성에서 설정 가능한 쿼리 스트링 파라미터
 
-| **Name** |	**Type** |	**Description** |
+| **이름** | **타입** | **설명** |
 | --- | --- | --- |
-| `autoplay` |	boolean |	If `true`, the video starts playing automatically, without the user clicking play. The exception is mobile devices, on which video cannot be played without user interaction. Default: `true`. |
-| `muted` |	boolean |	Specifies whether the initial state of the video is muted. Default: `false`. |
-| `time` |	1h2m3s |	Time in the video where playback starts. Specifies hours, minutes, and seconds. Default: `0h0m0s` (the start of the video). |
+| `autoplay` | boolean | `true`로 지정되면, 사용자가 재생 버튼을 누르지 않아도 비디오가 자동으로 재생됩니다. 모바일 기기에서는 사용자의 상호작용 없이 비디오를 재생할 수 없습니다. 기본값: `true`. |
+| `muted` | boolean | 영상의 초기 상태가 음소거인지를 지정합니다. 기본값: `false`. |
+| `time` | 1h2m3s | 영상 재생이 시작되는 시간. 시간, 분, 초를 지정합니다. 기본값: `0h0m0s` (영상 시작지점). |
 
-Video Metadata
+영상 메타데이터
 
-Video information such as duration, view count, and associated Twitch channel is available via the [Get Videos](/twitch-api/reference/get-videos) API endpoint.
+영상 길이나 조회 수, 연관된 트위치 채널과 같은 영상 정보는 [영상 조회하기](/ko/twitch-api/reference/get-videos) API 엔드포인트를 통해 조회할 수 있습니다.
 
-Examples
+예제
 
-Using a channel name:
+채널명을 사용하는 예제:
 
 ```html
 <iframe
@@ -64,7 +64,7 @@ Using a channel name:
 </iframe>
 ```
 
-Using a video ID:
+영상 ID를 사용하는 예제:
 
 ```html
 <iframe
@@ -75,7 +75,7 @@ Using a video ID:
 </iframe>
 ```
 
-Using a collection ID:
+컬렉션 ID를 사용하는 예제:
 
 ```html
 <iframe
@@ -86,7 +86,7 @@ Using a collection ID:
 </iframe>
 ```
 
-## Interactive Frames for Live Streams and VODs
+## 프로그래밍 방식으로 라이브 방송과 VOD 임베드하기
 
 ```html
 <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
@@ -98,7 +98,7 @@ Using a collection ID:
     channel: "<channel ID>",
     video: "<video ID>",
     collection: "<collection ID>",
-    // only needed if your site is also embedded on embed.example.com and othersite.example.com
+    // 임베드된 사이트가 embed.example.com과 othersite.example.com에도 있을 경우에만 필요합니다.
     parent: ["embed.example.com", "othersite.example.com"]
   };
   var player = new Twitch.Player("<player div ID>", options);
@@ -106,93 +106,93 @@ Using a collection ID:
 </script>
 ```
 
-Required Parameters
+필수 파라미터
 
-| **Name** |	**Type** |	**Description** |
+| **이름** | **타입** | **설명** |
 | --- | --- | --- |
-| `channel`<br />– OR –<br />`video`<br />– OR –<br />`collection` |	string	| Channel name (for a live stream), video ID, or collection ID. (To change the channel or video later, use `setChannel`, `setVideo`, or `setCollection`; see [Synchronous Playback Controls](/embedding-twitch/video-and-clips#synchronous-javascript-playback-api).)<br /><br />If both `video` and `collection` are specified, the specified collection starts playing from the specified video. If the video is not in the collection, `collection` is ignored and the specified video is played.<br />If `channel` is specified along with `video` and/or `collection`, only `channel` is used. |
-| `height` |	number or string |	Height of the embedded window, in pixels. Can be expressed as a percentage, by passing a string like `100%`. Recommended minimum: 300. |
-| `parent` |	string[] |	**Only required if your site is embedded on any domain(s) other than the one that instantiates the Twitch embed.** Example `parent` parameter: `["streamernews.example.com", "embed.example.com"]` |
-| `player div ID` |	string |	Any value you like, as long as it is the same in both locations within the example. |
-| `width` |	number or string |	Width of the embedded window, in pixels. Can be expressed as a percentage, by passing a string like `50%`. Recommended minimum: 400. |
+| `channel`<br />또는<br />`video`<br />또는<br />`collection` | string | (라이브 방송을 위한) 채널명, 영상 ID, 또는 컬렉션 ID. (채널이나 영상을 나중에 변경하려면 `setChannel`, `setVideo`, 또는 `setCollection`을 사용하세요. [동기식 재생 컨트롤](/ko/embedding-twitch/video-and-clips#synchronous-javascript-playback-api)을 참조하세요.)<br /><br />`video`와 `collection`이 모두 지정되면, 지정된 컬렉션은 지정된 영상부터 재생됩니다. 만약 영상이 컬렉션에 없다면, `collection`은 무시되고 지정된 영상이 재생됩니다.<br />`channel`이 `video`와/또는 `collection`과 함께 지정되면, `channel`만 사용됩니다. |
+| `height` | number 또는 string | 임베드할 창의 높이 (픽셀 단위). 이는 `100%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 300. |
+| `parent` | string[] | **Twitch 임베드를 생성하는 도메인과 다른 도메인에 임베드된 경우에만 필요합니다.** 예제 `parent` 파라미터: `["streamernews.example.com", "embed.example.com"]` |
+| `player div ID` | string | 사용하고자 하는 임베드된 플레이어의 ID. |
+| `width` | number 또는 string | 임베드할 창의 너비 (픽셀 단위). 이는 `50%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 400. |
 
-Optional Parameters
+선택 파라미터
 
-| **Name** |	**Type** |	**Description** |
+| **이름** | **타입** | **설명** |
 | --- | --- | --- |
-| `autoplay` |	boolean |	If `true`, the video starts playing automatically, without the user clicking play. The exception is mobile devices, on which video cannot be played without user interaction. Default: `true`. |
-| `muted` |	boolean |	Specifies whether the initial state of the video is muted. Default: `false`. |
-| `time`	| string |	Only valid for Video on Demand content. Time in the video where playback starts. Specifies hours, minutes, and seconds. Default: `0h0m0s` (the start of the video). |
+| `autoplay` | boolean | 만일 `true`로 설정되면, 사용자가 재생 버튼을 누르지 않아도 영상이 자동으로 재생됩니다. 모바일 기기에서는 사용자가 재생을 누르지 않는 이상 영상을 재생할 수 없습니다. 기본값: `true`. |
+| `muted` | boolean | 영상의 초기 상태가 음소거인지를 지정합니다. 기본값: `false`. |
+| `time` | string | VOD 콘텐츠에만 유효합니다. 재생이 시작되는 영상의 시간. 시간, 분, 초를 지정합니다. 기본값: `0h0m0s` (영상의 시작). |
 
-Synchronous JavaScript Playback API
+동기식 자바스크립트 재생 컨트롤
 
-| **Call** |	**Description** |
+| **함수** | **설명** |
 | --- | --- |
-| `disableCaptions():void` |	Disables display of Closed Captions. |
-| `enableCaptions():void` |	Enables display of Closed Captions. Note captions will only display if they are included in the video content being played. See the CAPTIONS JavaScript Event for more info. |
-| `pause():void` |	Pauses the player. |
-| `play():void` |	Begins playing the specified video. |
-| `seek(timestamp:Float):void` |	Seeks to the specified `timestamp` (in seconds) in the video. Does not work for live streams. |
-| `setChannel(channel:String):void` |	Sets the channel to be played. |
-| `setCollection(collection ID:String, video ID:String):void` |	Sets the collection to be played.<br />Optionally also specifies the video within the collection, from which to start playback. If a video ID is not provided here or the specified video is not part of the collection, playback starts with the first video in the collection. |
-| `setQuality(quality:String):void` |	Sets the quality of the video. `quality` should be a string value returned by `getQualities`. |
-| `setVideo(video ID:String, timestamp:Number):void` |	Sets the video to be played to be played and starts playback at `timestamp` (in seconds). |
+| `disableCaptions():void` | 자막 표시를 비활성화합니다. |
+| `enableCaptions():void` | 자막 표시를 활성화합니다. 자막은 재생되는 콘텐츠에 포함되어 있어야만 표시됩니다. 자세한 내용은 자막 자바스크립트 이벤트를 참조하세요. |
+| `pause():void` | 영상을 일시 중지합니다. |
+| `play():void` | 지정된 영상을 재생합니다. |
+| `seek(timestamp:Float):void` | 지정된 `timestamp` (초 단위)로 영상을 이동합니다. 라이브 방송에는 작동하지 않습니다. |
+| `setChannel(channel:String):void` |	재생할 채널을 설정합니다. |
+| `setCollection(collection ID:String, video ID:String):void` | 재생할 컬렉션을 설정합니다.<br />선택적으로 컬렉션 내에서 재생을 시작할 영상도 지정합니다. 만약 영상 ID가 제공되지 않거나 지정된 영상이 컬렉션에 없다면, 재생은 컬렉션의 첫 번째 영상부터 시작됩니다. |
+| `setQuality(quality:String):void` | 영상의 화질을 설정합니다. `quality`는 `getQualities`가 반환하는 문자열 값이어야 합니다. |
+| `setVideo(video ID:String, timestamp:Number):void` | 재생할 영상을 설정하고 `timestamp` (초 단위)에서 재생을 시작합니다. |
 
-Synchronous JavaScript Volume API
+동기식 자바스크립트 볼륨 API
 
-| **Call** |	**Description** |
+| **함수** | **설명** |
 | --- | --- |
-| `getMuted():Boolean` |	Returns `true` if the player is muted; otherwise, `false`. |
-| `setMuted(muted:Boolean):void` |	If `true`, mutes the player; otherwise, unmutes it. This is independent of the volume setting. |
-| `getVolume():Float` |	Returns the volume level, a value between 0.0 and 1.0. |
-| `setVolume(volumelevel:Float):void` |	Sets the volume to the specified volume level, a value between 0.0 and 1.0. |
+| `getMuted():Boolean` | 플레이어가 음소거되어 있으면 `true`를, 그렇지 않으면 `false`를 반환합니다. |
+| `setMuted(muted:Boolean):void` | `true`로 설정하면 플레이어가 음소거되고, `false`로 설정하면 음소거가 해제됩니다. 이는 볼륨 설정과는 독립적입니다. |
+| `getVolume():Float` | 설정된 볼륨을 반환합니다. 값은 0.0과 1.0 사이의 값입니다. |
+| `setVolume(volumelevel:Float):void` | 지정된 볼륨 레벨로 볼륨을 설정합니다. 값은 0.0과 1.0 사이의 값입니다. |
 
-Synchronous JavaScript Status API
+동기식 자바스크립트 상태 API
 
-| **Call** |	**Description** |
+| **함수** | **설명** |
 | --- | --- |
-| `getPlaybackStats():PlaybackStats` |	Returns an object with statistics on the embedded video player and the current live stream or VOD. See below for more info. |
-| `getChannel():String` |	Returns the channel’s name. Works only for live streams, not VODs. |
-| `getCurrentTime():Float` |	Returns the current video’s timestamp, in seconds. Works only for VODs, not live streams. |
-| `getDuration():Float` |	Returns the duration of the video, in seconds. Works only for VODs,not live streams. |
-| `getEnded():Boolean` |	Returns true if the live stream or VOD has ended; otherwise, false. |
-| `getQualities():String[]` |	Returns the available video qualities. For example, `chunked` (pass-through of the original source). |
-| `getQuality():String` |	Returns the current quality of video playback. |
-| `getVideo():String` |	Returns the video ID. Works only for VODs, not live streams. |
-| `isPaused():Boolean` |	Returns true if the video is paused; otherwise, false. Buffering or seeking is considered playing. |
+| `getPlaybackStats():PlaybackStats` | 임베드된 비디오 플레이어와 현재 라이브 방송 또는 VOD에 대한 통계를 포함하는 객체를 반환합니다. 자세한 내용은 아래를 참조하세요. |
+| `getChannel():String` | 채널명을 반환합니다. 라이브 방송에만 작동하며 VOD에는 작동하지 않습니다. |
+| `getCurrentTime():Float` | 영상의 현재 타임스탬프를 초 단위로 반환합니다. VOD에만 작동하며 라이브 방송에는 작동하지 않습니다. |
+| `getDuration():Float` | 영상의 길이를 초 단위로 반환합니다. VOD에만 작동하며 라이브 방송에는 작동하지 않습니다. |
+| `getEnded():Boolean` | 라이브 방송이나 VOD가 종료되면 `true`를, 그렇지 않으면 `false`를 반환합니다. |
+| `getQualities():String[]` | 시청 가능한 영상 화질을 반환합니다. `원본화질` (원본 소스 그대로 보여주는 것)을 예로 들 수 있습니다. |
+| `getQuality():String` | 현재 재생 중인 영상의 화질을 반환합니다. |
+| `getVideo():String` | 영상 ID를 반환합니다. VOD에만 작동하며 라이브 방송에는 작동하지 않습니다. |
+| `isPaused():Boolean` | 영상이 일시정지되어 있으면 `true`를, 그렇지 않으면 `false`를 반환합니다. 버퍼링 중이거나, 재생 위치를 이동 중인 경우에도 재생 중으로 간주됩니다. |
 
-**PlaybackStats Object attributes**
+**PlaybackStats 객체 속성**
 
-| **Name** |	**Type** |	**Description** |
+| **이름** | **타입** | **설명** |
 | --- | --- | --- |
-| `backendVersion` |	string |	The version of the Twitch video player backend. |
-| `bufferSize` |	number |	The size of the video buffer in seconds. |
-| `codecs` |	string |	Codecs currently in use, comma-separated (video,audio). |
-| `displayResolution` |	string |	The current size of the video player element (eg. 850x480). |
-| `fps` |	number |	The video playback rate in frames per second. Not available on all browsers. |
-| `hlsLatencyBroadcaster` |	number |	Current latency to the broadcaster in seconds. Only available for live content. |
-| `playbackRate` |	number |	The playback bitrate in Kbps. |
-| `skippedFrames` |	number |	The number of dropped frames. |
-| `videoResolution` |	string |	The native resolution of the current video (eg. 640x480). |
+| `backendVersion` | string | 트위치 비디오 플레이어 백엔드의 버전입니다. |
+| `bufferSize` | number | 영상 버퍼의 크기 (초 단위)입니다. |
+| `codecs` | string | 현재 사용 중인 코덱입니다. 쉼표로 구분합니다. (비디오, 오디오 순) |
+| `displayResolution` | string | 비디오 플레이어의 현재 크기입니다. (예: 850x480) |
+| `fps` | number | 초당 비디오 재생률입니다. 모든 브라우저에서 지원되지 않습니다. |
+| `hlsLatencyBroadcaster` | number | 스트리머의 현재 지연시간 (초 단위)입니다. 라이브 방송에만 작동합니다. |
+| `playbackRate` | number | 영상 비트레이트입니다 (Kbps 단위) |
+| `skippedFrames` | number | 드롭된 프레임의 수입니다. |
+| `videoResolution` | string | 현재 영상의 실제 해상도입니다. (예: 640x480) |
 
-JavaScript Events
+자바스크립트 이벤트
 
-To listen to events, call `addEventListener(event:String, callback:Function)`.
+이벤트를 듣기 위해서는 `addEventListener(event:String, callback:Function)`를 호출하십시오.
 
-| **Event** |	**Emitted when …** |
+| **이벤트** | **이벤트가 발생하는 경우** |
 | --- | --- |
-| `Twitch.Player.CAPTIONS` |	Closed captions are found in the video content being played. This event will be emitted once for each new batch of captions, in sync with the corresponding video content. The event payload is a string containing the caption content. |
-| `Twitch.Player.ENDED` |	Video or stream ends. |
-| `Twitch.Player.PAUSE` |	Player is paused. Buffering and seeking is not considered paused. |
-| `Twitch.Player.PLAY` |	Player just unpaused, will either start video playback or start buffering. |
-| `Twitch.Player.PLAYBACK_BLOCKED` |	Player playback was blocked. Usually fired after an unmuted autoplay or unmuted programmatic call on `play()`. |
-| `Twitch.Player.PLAYING` |	Player started video playback. |
-| `Twitch.Player.OFFLINE` |	Loaded channel goes offline. |
-| `Twitch.Player.ONLINE` |	Loaded channel goes online. |
-| `Twitch.Player.READY` |	Player is ready to accept function calls. |
-| `Twitch.Player.SEEK` |	User has used the player controls to seek a VOD, the seek() method has been called, or live playback has seeked to sync up after being paused. |
+| `Twitch.Player.CAPTIONS` | 재생 중인 영상 콘텐츠에 자막이 포함되어 있습니다. 이 이벤트는 새 자막이 발견될 때마다 호출됩니다. 이벤트 페이로드는 자막 콘텐츠를 포함하는 문자열입니다. |
+| `Twitch.Player.ENDED` | 영상이나 스트림이 종료되면 발생합니다. |
+| `Twitch.Player.PAUSE` | 플레이어가 일시정지되었습니다. 버퍼링이나 재생 위치 이동은 일시정지로 간주되지 않습니다. |
+| `Twitch.Player.PLAY` | 플레이어 재생이 시작되었습니다. 영상을 시작하거나, 버퍼링이 시작되었음을 의미합니다. |
+| `Twitch.Player.PLAYBACK_BLOCKED` | 플레이어 재생이 차단되었습니다. 보통 음소거되지 않은 자동 재생이나 음소거되지 않은 프로그래밍 방식의 재생 호출 후에 발생합니다. |
+| `Twitch.Player.PLAYING` | 플레이어가 영상 재생을 시작했습니다. |
+| `Twitch.Player.OFFLINE` | 채널이 오프라인 상태로 변경되었습니다. |
+| `Twitch.Player.ONLINE` | 채널이 온라인 상태로 변경되었습니다. |
+| `Twitch.Player.READY` | 플레이어가 함수 호출을 받을 준비가 되었습니다. |
+| `Twitch.Player.SEEK` | 사용자가 플레이어 컨트롤을 사용해 VOD의 재생위치를 변경했거나, seek() 메서드가 호출되었거나, 또는 라이브 방송이 일시정지되었다가 다시 재생되면 발생합니다. |
 
-Example
+예제
 
 ```html
 <script src= "https://player.twitch.tv/js/embed/v1.js"></script>
@@ -202,7 +202,7 @@ Example
     width: 854,
     height: 480,
     channel: "twitchdev",
-    // Only needed if this page is going to be embedded on other websites
+    // 다른 웹사이트에 임베드할 경우에만 필요
     parent: ["embed.example.com", "othersite.example.com"]
   };
   var player = new Twitch.Player("SamplePlayerDivID", options);
@@ -210,11 +210,11 @@ Example
 </script>
 ```
 
-## Non-Interactive IFrames for Clips
+## IFrame으로 클립 임베드하기
 
-Embedding a Clip is different than embedding a live stream or VOD. The embedded Clips player uses a different set of query parameters and does not support the JavaScript interactive embed.
+클립을 임베드하는 방법은 라이브 방송이나 VOD를 임베드하는 방법과 다릅니다. 임베드된 클립 플레이어는 다른 쿼리 매개변수를 사용하며, 프로그래밍 방식의 임베드를 지원하지 않습니다.
 
-IFrame Prototype
+IFrame 예제
 
 ```html
 <iframe
@@ -225,25 +225,25 @@ IFrame Prototype
 </iframe>
 ```
 
-Iframe Attributes
+Iframe 속성
 
-| Name |	Type |	Description |
+| 이름 | 타입 | 설명
 | --- | --- | --- |
-| `allowfullscreen` |	boolean |	A boolean attribute set by inclusion. In other words, including the attribute enables fullscreen viewing while excluding the attribute ensures fullscreen viewing is not allowed. |
-| `clip` |	string |	A globally unique string called a slug, by which clips are referenced. |
-| `height` |	number or string |	Height of the embedded window, in pixels. This can be expressed as a percentage, by passing a string like `50%`. Recommended minimum: 300. |
-| `parent` |	string |	**(required)** Domain(s) that will be embedding Twitch. You must have one parent key for each domain your site uses. |
-| `preload` |	enum |	A hint to the browser about what the developer thinks will lead to the best user experience. Valid values:<br /><br />`none` - The video should not be preloaded.<br /><br />`metadata` - Only video metadata (e.g., length) is fetched. This is the recommended value.<br /><br />`auto` - The whole video file could be downloaded, even if the user is not expected to use it.<br /><br />`""` (empty string) - Same as `auto`.<br /><br />Default: browser-defined.<br /><br />The HTML specification does not force the browser to follow the value of this attribute; it is merely a hint. |
-| `width` |	number or string |	Width of the embedded window, in pixels. This can be expressed as a percentage, by passing a string like `50%`. Recommended minimum: 400. |
+| `allowfullscreen` | boolean | 이 속성은 포함하기만 해도 설정됩니다. 다시 말해, 이 속성을 포함하면 전체 화면 전환이 가능하고, 이 속성을 제외하면 전체 화면 전환이 불가능합니다. |
+| `clip` | string | `slug`라고 불리는 전역 유일 문자열입니다. 클립은 이 문자열로 연결됩니다. |
+| `height` | number 또는 string | 임베드된 창의 높이 (픽셀 단위). 이는 `50%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 300. |
+| `parent` | string | **(필수)** 트위치를 임베드할 도메인입니다. 사이트가 사용하는 각 도메인에 대해 하나의 parent 키를 가져야 합니다. |
+| `preload` | enum | 최고의 사용자 경험을 제공하기 위해 개발자가 브라우저에게 주는 힌트입니다. 가능한 값:<br /><br />`none` - 비디오를 미리 로드하지 않습니다.<br /><br />`metadata` - 비디오 메타데이터(예: 길이)만 가져옵니다. 이것이 권장되는 값입니다.<br /><br />`auto` - 사용자가 사용하지 않을지라도 전체 비디오 파일을 다운로드할 수 있습니다.<br /><br />`""` (빈 문자열) - `auto`와 동일합니다.<br /><br />기본값: 브라우저가 정의합니다.<br /><br />HTML 사양은 브라우저가 이 속성의 값을 따르도록 강제하지 않습니다. 이는 단지 힌트로만 동작합니다. |
+| `width` | number 또는 string | 임베드된 창의 너비 (픽셀 단위). 이는 `50%`와 같은 문자열을 통해 백분율로 표현할 수 있습니다. 권장 최소값: 400 |
 
-Optional IFrame Query Parameters
+선택적 IFrame URL 쿼리 파라미터
 
-| Name |	Type |	Description |
+| 이름 | 타입 | 설명 |
 | --- | --- | --- |
-| `autoplay` |	boolean |	If `true`, the video starts playing automatically, without the user clicking play. The exception is mobile devices, on which video cannot be played without user interaction. Default: `false`. |
-| `muted` |	boolean |	Specifies whether the initial state of the video is muted. Default: `false`. |
+| `autoplay` | boolean | `true`로 지정되면, 사용자가 재생 버튼을 누르지 않아도 비디오가 자동으로 재생됩니다. 모바일 기기에서는 사용자의 상호작용 없이 비디오를 재생할 수 없습니다. 기본값: `false`. |
+| `muted` | boolean | 영상의 초기 상태가 음소거인지를 지정합니다. 기본값: `false`. |
 
-Example
+예제
 
 ```html
 <iframe
