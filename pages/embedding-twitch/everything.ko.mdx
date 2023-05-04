@@ -1,41 +1,41 @@
-# Embedding Everything
+# 전체 임베드하기
 
-This guide explains how to embed video-on-demand content or live video with Twitch Chat on your website.
+이 가이드는 실시간 비디오 또는 Twitch Chat와 함께 VOD 콘텐츠를 웹 사이트에 임베드하는 방법을 설명합니다.
 
-## Authentication
+## 인증
 
-Users of embedded Twitch are authenticated in the same way as the Twitch website and logging in is a seamless, lightweight experience. Logged-in users can chat, follow a channel, or subscribe to a channel. If a user attempts to perform one of these actions while not logged in, they will be prompted to log in or create a Twitch account.
+트위치 임베드에서의 사용자 인증은 트위치 웹사이트와 같은 방식으로 원활하고 가벼운 경험을 제공합니다. 로그인된 사용자는 채팅을 치거나, 채널을 팔로우하거나 구독할 수 있습니다. 만일 유저가 로그인이 되지 않은 상태에서 이러한 행동을 하려고 하면, 트위치 계정을 생성하거나 로그인하도록 유도합니다.
 
-## Overlays
+## 오버레이
 
-The Twitch embed contains buttons for Sign In, Follow, and Subscribe, in an overlay above the player.
+트위치 임베드는 로그인 버튼, 팔로우와 구독 버튼을 플레이어 위에 오버레이로 표시합니다.
 
-In some cases, clicking a button opens a pop-up window that allows the user to complete the desired action (for example, navigate through the payment flow or create an account). In others, it automatically goes through with the action (such as Following).
+몇몇 경우에는, 버튼을 클릭하면 팝업창이 열리고, 사용자가 원하는 행동을 완료할 수 있습니다. (예를 들어, 결제 과정을 거치거나 계정을 생성합니다.) 그 외에 팔로우같은 요청은 자동으로 동작합니다.
 
-The name of the channel being watched is an overlay that appears when you hover your mouse over the player. On embeds, these titles do not link back to Twitch.
+현재 시청하고 있는 채널의 이름은 플레이어 위에 마우스를 올리면 오버레이로 표시됩니다. 임베드에서는 이러한 제목을 눌러도 트위치로 이동하지 않습니다.
 
-## Usage
+## 사용법
 
-1. Add a placeholder element with a unique ID to your page, where you want the Twitch embed to be displayed.
-2. Load the Twitch embed JavaScript file.
-3. Initialize a `Twitch.Embed` object, with the placeholder element ID and options. **If your site will be embedded on other domains, you must include them as a JavaScript array of strings under the `parent` key.**
+1. 트위치 임베드가 표시되기를 원하는 곳에, 고유한 ID를 가진 엘리먼트를 추가합니다.
+2. 트위치 임베드 자바스크립트 파일을 로드합니다.
+3. `Twitch.Embed` 객체를 초기화합니다. 이 때, 1에서 설정한 ID값과 옵션을 넣어줍니다. **만약 이 페이지가 다른 도메인에 임베드될 경우, `parent` 키 아래에 자바스크립트 배열로 도메인을 넣어줘야 합니다.**
 
 ```html
 <html>
   <body>
-    <!-- Add a placeholder for the Twitch embed -->
+    <!-- 트위치 임베드를 위한 엘리먼트를 추가합니다. -->
     <div id="twitch-embed"></div>
 
-    <!-- Load the Twitch embed JavaScript file -->
+    <!-- 트위치 임베드 자바스크립트 파일을 로드합니다. -->
     <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-    <!-- Create a Twitch.Embed object that will render within the "twitch-embed" element -->
+    <!-- "twitch-embed" 엘리먼트에 렌더링될 Twitch.Embed 객체를 생성합니다. -->
     <script type="text/javascript">
       new Twitch.Embed("twitch-embed", {
         width: 854,
         height: 480,
         channel: "monstercat",
-        // Only needed if this page is going to be embedded on other websites
+        // 다른 웹사이트에 임베드될 경우에만 필요합니다.
         parent: ["embed.example.com", "othersite.example.com"]
       });
     </script>
@@ -43,26 +43,26 @@ The name of the channel being watched is an overlay that appears when you hover 
 </html>
 ```
 
-Embed Parameters
+임베드 파라미터
 
-| Option | Type | Description |
+| 옵션 | 타입 | 설명 |
 | --- | --- | --- |
-| `allowfullscreen` |	boolean |	If `true`, the player can go full screen. Default: `true`. |
-| `autoplay`	| boolean |	If `true`, the video starts playing automatically, without the user clicking play. The exception is mobile devices, on which video cannot be played without user interaction. Default: `true`. |
-| `channel` |	string |	Name of the chat room and channel (live content only). |
-| `collection` |	string	| The VOD collection to play. If you use this, you may also specify an initial `video` in the VOD collection, otherwise playback will begin with the first video in the collection. All VODs are auto-played. Chat replay is not supported. Example parameters object: `{ video: "124085610", collection: "GMEgKwTQpRQwyA" }` |
-| `height` |	number  or string |	Height of the rendered element, in pixels. This can be expressed as a percentage, by passing a string like `50%`. Minimum: 400. Default: 480. |
-| `layout`	| string |	Determines the screen layout. Valid values:<ul><li>`video-with-chat: Default if channel is provided, and only supported for live content. Shows both video and chat side-by-side. At narrow sizes, chat renders under the video player.</li><li>video: Default if channel is not provided. Shows only the video player (omits chat).</li></ul> |
-| `muted` |	boolean |	Specifies whether the initial state of the video is muted. Default: `false`. |
-| `parent` |	string[]	| Required if your site is embedded on any domain(s) other than the one that instantiates the Twitch embed. Example `parent` parameter: `["streamernews.example.com", "embed.example.com"]`. |
-| `theme` |	string |	The Twitch embed color theme to use. Valid values: `light` or `dark`. Default: `dark`. |
-| `time` |	string |	Time in the video where playback starts. Specifies hours, minutes, and seconds. Default: `0h0m0s` (the start of the video). |
-| `video` |	string |	ID of a VOD to play. Chat replay is not supported. |
-| `width` |	number or string |	Maximum width of the rendered element, in pixels. This can be expressed as a percentage, by passing a string like `100%`. Minimum: 340. Default: 940. |
+| `allowfullscreen` |	boolean |	값이 `true`면, 플레이어가 전체화면으로 전환될 수 있습니다. 기본값: `true`. |
+| `autoplay` | boolean | 값이 `true`면, 유저가 재생을 누르지 않더라도 자동으로 재생됩니다. 단, 모바일 기기에서는 유저가 재생을 누르지 않으면 영상이 시작하지 않습니다. 기본값: `true`. |
+| `channel` | string | 채팅방 이름과 채널 이름 (실시간 콘텐츠만 해당됨). |
+| `collection` | string | 재생하기 위한 영상 컬렉션(VOD Collection). 이 옵션을 사용하면, 컬렉션 내의 영상 중 시작 영상을 `video` 옵션을 통해 지정할 수 있습니다. 만약 `video` 옵션을 지정하지 않으면, 첫 번째 영상부터 재생됩니다. 모든 VOD는 자동으로 재생되며, 이전 채팅 목록은 지원되지 않습니다. 예제 파라미터 객체: `{ video: "124085610", collection: "GMEgKwTQpRQwyA" }` |
+| `height` | number 또는 string | 렌더링할 엘리먼트의 높이 (픽셀 단위). '50%'와 같이 문자열로 넣으면 백분율로도 표현 가능합니다. 최소값: 400. 기본값: 480. |
+| `layout` | string | 화면에 보여질 레이아웃을 결정합니다.<br />가능한 값:<br /><br />`video-with-chat`: `channel` 값이 제공되었을 때 기본값이며, 라이브 콘텐츠만 제공합니다. 그리고 영상과 채팅을 양쪽으로 보여줍니다. 화면의 크기가 좁아지면, 채팅창은 영상 플레이어 아래에 보여집니다.<br /><br />`video`: `channel` 값이 제공되지 않았을 때 기본값이며, 영상 플레이어만 보여줍니다 (채팅창 제외). |
+| `muted` | boolean | 영상의 초기 상태가 음소거인지를 지정합니다. 기본값: `false`. |
+| `parent` | string[] | 트위치 임베드가 다른 도메인에 임베드될 경우, 필수로 제공되어야 합니다. 예제 파라미터: `["streamernews.example.com", "embed.example.com"]`. |
+| `theme` | string | 트위치 임베드의 색상 테마를 지정합니다. 가능한 값: `light` 또는 `dark`. 기본값: `dark`. |
+| `time` | string | 영상의 재생 시작 시간을 지정합니다. 시간은 시, 분, 초 단위로 표현합니다. 기본값: `0h0m0s` (영상의 시작 시점). |
+| `video` | string | 재생할 VOD의 ID. 채팅 재생은 지원되지 않습니다. |
+| `width` | number 또는 string | 렌더링할 엘리먼트의 최대 너비 (픽셀 단위). '100%'와 같이 문자열로 넣으면 백분율로도 표현 가능합니다. 최소값: 340. 기본값: 940. |
 
-Working with Events
+이벤트 처리
 
-To listen to events, create a `Twitch.Embed` object, then call the `addEventListener` method on that object:
+이벤트를 받기 위해, `Twitch.Embed` 객체를 생성한 후, 그 객체에 `addEventListener` 메서드를 호출합니다.
 
 ```javascript
 var embed = new Twitch.Embed('twitch-embed', {
@@ -70,31 +70,31 @@ var embed = new Twitch.Embed('twitch-embed', {
 });
 
 embed.addEventListener(Twitch.Embed.VIDEO_READY, function() {
-  console.log('The video is ready');
+  console.log('비디오가 준비되었어요!');
 });
 ```
 
-Available Events
+가능한 이벤트
 
-| Event |	Description |
+| 이벤트 | 설명 |
 | --- | --- |
-| `Twitch.Embed.VIDEO_PLAY`	| The video started playing. This callback receives an object with a `sessionId` property. |
-| `Twitch.Embed.VIDEO_READY` |	The video player is ready for API commands. |
+| `Twitch.Embed.VIDEO_PLAY` | 비디오 재생이 시작되었을 때 호출됩니다. 이 콜백은 `sessionId` 속성을 가진 객체를 받습니다. |
+| `Twitch.Embed.VIDEO_READY` | 비디오 플레이어가 API 명령을 받을 준비가 되었을 때 호출됩니다. |
 
-## Programmatic Access
+## 프로그래밍 방식으로 접근하기
 
-To provide additional functionality to our API, access specific components with `getPlayer()`, which retrieves the current video player instance from the embed and provides full programmatic access to the [video player API](/embedding-twitch/video-and-clips#interactive-frames-for-live-streams-and-vods).
+API로 추가 기능을 제공하기 위해, `getPlayer()`를 사용하여 특정 컴포넌트에 접근합니다. 이 메서드는 임베드에서 현재 비디오 플레이어를 검색하고, [비디오 플레이어 API](/ko/embedding-twitch/video-and-clips#interactive-frames-for-live-streams-and-vods)를 프로그래밍 방식으로 접근할 수 있도록 합니다.
 
 ```html
 <html>
   <body>
-    <!-- Add a placeholder for the Twitch embed -->
+    <!-- 트위치 임베드를 위한 엘리먼트를 추가합니다. -->
     <div id="twitch-embed"></div>
 
-    <!-- Load the Twitch embed script -->
+    <!-- 트위치 임베드 자바스크립트 파일을 로드합니다. -->
     <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-    <!-- Create a Twitch.Embed object that will render within the "twitch-embed" element. -->
+    <!-- "twitch-embed" 엘리먼트에 렌더링될 Twitch.Embed 객체를 생성합니다. -->
     <script type="text/javascript">
       var embed = new Twitch.Embed("twitch-embed", {
         width: 854,
@@ -102,7 +102,7 @@ To provide additional functionality to our API, access specific components with 
         channel: "monstercat",
         layout: "video",
         autoplay: false,
-        // Only needed if this page is going to be embedded on other websites
+        // 다른 웹사이트에 임베드될 경우에만 필요합니다.
         parent: ["embed.example.com", "othersite.example.com"]
       });
 

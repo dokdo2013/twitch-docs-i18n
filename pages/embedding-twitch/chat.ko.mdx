@@ -1,8 +1,8 @@
-# Embedding Chat
+# 채팅창 임베드하기
 
-## Usage
+## 사용법
 
-Use the following HTML template to embed a Twitch chat window on your website. The parameters to configure the chat window are described below.
+아래 HTML 템플릿을 이용해 트위치 채팅창을 웹사이트에 임베드할 수 있습니다. 채팅창을 설정하기 위한 파라미터는 아래에서 설명합니다.
 
 ```html
 <iframe src="https://www.twitch.tv/embed/<channel>/chat?parent=<parent>"
@@ -11,30 +11,30 @@ Use the following HTML template to embed a Twitch chat window on your website. T
 </iframe>
 ```
 
-## Parameters
+## 파라미터
 
-| Name |	Required |	Description |
+| 이름 | 필수여부 | 설명 |
 | --- | --- | --- |
-| `src`	| Yes |	Chat embed URL. This defines which channel’s chat should be shown and the domain(s) where the embed is being placed.<br /><br />`channel`: The channel name.<br />`parent`: Domain(s) that will be embedding Twitch. Multiple parent parameters can be defined in the URL. A parent parameter is needed for each domain your site is hosted or embedded on. |
-| `height` |	No |	Height of the chat window. This can be defined in pixels or as a percentage (e.g. `500` or `50%`). |
-| `width` |	No |	Width of the chat window. This can be defined in pixels or as a percentage (e.g. `500` or `50%`). |
-| `sandbox` |	No |	If specified, the following keywords must be included to ensure all Twitch features will function as expected: `allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals` |
+| `src` | 예 | 채팅창 임베드 URL. 이 파라미터는 채팅창을 보여줄 채널과 임베드가 될 도메인을 정의합니다.<br /><br />`channel`: 채널 이름.<br />`parent`: 트위치를 임베드할 도메인. URL에 여러 개의 parent 파라미터를 정의할 수 있습니다. 사이트가 호스팅되거나 임베드되는 각 도메인에 대해 parent 파라미터가 필요합니다. |
+| `height` | 아니오 | 채팅창의 높이. 픽셀 단위나 퍼센트 단위로 정의할 수 있습니다. (예: `500` 또는 `50%`) |
+| `width` | 아니오 | 채팅창의 너비. 픽셀 단위나 퍼센트 단위로 정의할 수 있습니다. (예: `500` 또는 `50%`) |
+| `sandbox` | 아니오 | 모든 트위치 기능이 예상대로 작동하도록 하려면 다음 키워드를 포함해야 합니다: `allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals` |
 
-## Example
+## 예제
 
-This example demonstrates how the chat for the TwitchDev channel can be embedded on this particular site.
+다음 예제는 TwitchDev 채널의 채팅창을 이 사이트에 임베드하는 방법을 보여줍니다.
 
-Source Code
+소스 코드
 
 ```html
 <iframe id="twitch-chat-embed"
-        src="https://www.twitch.tv/embed/twitchdev/chat?parent=dev.twitch.tv"
+        src="https://www.twitch.tv/embed/twitchdev/chat?parent=twitch-docs-i18n.vercel.app"
         height="500"
         width="350">
 </iframe>
 ```
 
-Result
+결과
 
 <iframe id="twitch-chat-embed"
         src="https://www.twitch.tv/embed/twitchdev/chat?parent=twitch-docs-i18n.vercel.app"
