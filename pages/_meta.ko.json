@@ -3,7 +3,7 @@
   "twitch-api": "API",
   "eventsub": "EventSub",
   "chat": "채팅 & 챗봇",
-  "auth": "인증",
+  "authentication": "인증",
   "organizations": "조직",
   "drops": "드롭스",
   "embedding-twitch": "트위치 임베딩",

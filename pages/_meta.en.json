@@ -3,7 +3,7 @@
   "twitch-api": "API",
   "eventsub": "EventSub",
   "chat": "Chat & Chatbot",
-  "auth": "Authentication",
+  "authentication": "Authentication",
   "organizations": "Organizations",
   "drops": "Drops",
   "embedding-twitch": "Embedding Twitch",

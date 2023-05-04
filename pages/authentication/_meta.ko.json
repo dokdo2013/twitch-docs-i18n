@@ -6,5 +6,5 @@
   "refreshing-access-tokens": "액세스 토큰 갱신",
   "validating-tokens": "토큰 유효성 검사",
   "revoking-access-tokens": "액세스 토큰 만료",
-  "scopes": "토큰 범위"
+  "scopes": "토큰 스코프"
 }
