@@ -1,6 +1,6 @@
 {
   "introduction": "소개",
-  "Everything": "전체 임베드",
-  "Chat": "채팅창 임베드",
-  "Video & Clips": "비디오 & 클립 임베드"
+  "everything": "전체 임베드",
+  "chat": "채팅창 임베드",
+  "video-and-clips": "비디오 & 클립 임베드"
 }

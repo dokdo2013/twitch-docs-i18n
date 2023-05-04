@@ -1,0 +1,43 @@
+# Embedding Chat
+
+## Usage
+
+Use the following HTML template to embed a Twitch chat window on your website. The parameters to configure the chat window are described below.
+
+```html
+<iframe src="https://www.twitch.tv/embed/<channel>/chat?parent=<parent>"
+        height="<height>"
+        width="<width>">
+</iframe>
+```
+
+## Parameters
+
+| Name |	Required |	Description |
+| --- | --- | --- |
+| `src`	| Yes |	Chat embed URL. This defines which channel’s chat should be shown and the domain(s) where the embed is being placed.<br /><br />`channel`: The channel name.<br />`parent`: Domain(s) that will be embedding Twitch. Multiple parent parameters can be defined in the URL. A parent parameter is needed for each domain your site is hosted or embedded on. |
+| `height` |	No |	Height of the chat window. This can be defined in pixels or as a percentage (e.g. `500` or `50%`). |
+| `width` |	No |	Width of the chat window. This can be defined in pixels or as a percentage (e.g. `500` or `50%`). |
+| `sandbox` |	No |	If specified, the following keywords must be included to ensure all Twitch features will function as expected: `allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals` |
+
+## Example
+
+This example demonstrates how the chat for the TwitchDev channel can be embedded on this particular site.
+
+Source Code
+
+```html
+<iframe id="twitch-chat-embed"
+        src="https://www.twitch.tv/embed/twitchdev/chat?parent=dev.twitch.tv"
+        height="500"
+        width="350">
+</iframe>
+```
+
+Result
+
+<iframe id="twitch-chat-embed"
+        src="https://www.twitch.tv/embed/twitchdev/chat?parent=twitch-docs-i18n.vercel.app"
+        height="500"
+        width="350">
+</iframe>
