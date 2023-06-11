@@ -5,6 +5,7 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
+  output: 'standalone',
   reactStrictMode: true,
   i18n: {
     locales: ["en", "ko"],
