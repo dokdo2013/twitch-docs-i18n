@@ -1,0 +1,756 @@
+# Moderating a Broadcaster’s Chat
+
+It can be tough for broadcaster’s to put on a great show and moderate chat at the same time. To help out, Twitch created the Moderator role. Broadcasters appoint moderators to help ensure that the broadcaster’s chat room is a safe, welcoming, and fun place to hang out. [Read more](https://help.twitch.tv/s/article/Managing-Roles-for-your-Channel#types)
+
+## Managing the broadcaster’s moderators
+
+For a busy broadcaster, appointing moderators to their chat room is key to having a safe, welcoming, and fun place for viewers to hang out.
+
+### Adding moderators
+
+To add a moderator to the broadcaster’s chat room, use the [Add Moderator](https://dev.twitch.tv/docs/api/reference#add-channel-moderator) endpoint. There is no limit to the number of moderators that a broadcaster may add to their chat room.
+
+The request must include:
+
+- A user access token that includes the **channel:manage:moderators** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that’s adding the moderator. This ID must match the user ID in the user access token.
+- The user_id query parameter that’s set to the ID of the user to make a moderator. The user that you’re adding can’t already be a moderator in the broadcaster’s chat room, can’t be a VIP, and can’t be banned from the chat room.
+
+The following example shows adding a moderator.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=1234&user_id=5678' \
+-H 'Authorization: Bearer jphlwj2k1wm09hwjmoidml1cs0bt' \
+-H 'Client-Id: hof5gwx0su6fnys0nyan9c87zr6t'
+```
+
+If the request succeeds, the response is an HTTP 204 No Content status code.
+
+### Removing moderators
+
+To remove a moderator from the broadcaster’s chat room, use the [Remove Moderator](https://dev.twitch.tv/docs/api/reference#remove-channel-moderator) endpoint.
+
+The request must include:
+
+- A user access token that includes the **channel:manage:moderators** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that’s removing the moderator. This ID must match the user ID in the user access token.
+- The user_id query parameter that’s set to the ID of the user to remove as a moderator.
+
+The following example shows removing a moderator.
+
+```bash
+curl -X DELETE 'https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=1234&user_id=5678' \
+-H 'Authorization: Bearer jphlwj2k1wm09hwjmoidml1cs0bt' \
+-H 'Client-Id: hof5gwx0su6fnys0nyan9c87zr6t'
+```
+
+If the request succeeds, the response is an HTTP 204 No Content status code.
+
+### Getting a list of the broadcaster’s moderators
+
+To get a list of the broadcaster’s moderators, use the [Get Moderators](https://dev.twitch.tv/docs/api/reference#get-moderators) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderation:read** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster whose list of moderators you want to get. This ID must match the user ID in the user access token.
+
+The following example shows getting the broadcaster’s list of moderators.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=1234' \
+-H 'Authorization: Bearer jphlwj2k1wm09hwjmoidml1cs0bt' \
+-H 'Client-Id: hof5gwx0su6fnys0nyan9c87zr6t'
+```
+
+The following example shows the response if the broadcaster has moderators.
+
+```json
+{
+  "data": [
+    {
+      "user_id": "5678",
+      "user_login": "fun2bfun",
+      "user_name": "Fun2bFun"
+    },
+    . . .
+  ],
+  "pagination": {}
+}
+```
+
+The request includes an optional user_id query parameter that you can use to check if the user is a moderator in the broadcaster’s chat room. You may specify a maximum of 100 IDs. To specify multiple IDs, repeat the id parameter for each user you want to check. For example, `user_id=123&user_id=456&user_id=789`. Ignores duplicate and invalid IDs.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=1234&user_id=5678' \
+-H 'Authorization: Bearer jphlwj2k1wm09hwjmoidml1cs0bt' \
+-H 'Client-Id: hof5gwx0su6fnys0nyan9c87zr6t'
+```
+
+If the user is a moderator, the response contains the user’s name (see the example above). If you specify multiple IDs, they’re returned in the same order that you specified them. If none of the specified users are moderators, the response contains an empty `data` array.
+
+```json
+{
+  "data": [],
+  "pagination": {}
+}
+```
+
+## Managing a broadcaster’s AutoMod settings
+
+Sometimes it can be a little overwhelming for a moderator to keep track of all the chat messages in a busy chat room. This is why Twitch offers the AutoMod feature to automatically block inappropriate or harassing messages from appearing in the broadcaster’s chat room. [Read more](https://help.twitch.tv/s/article/how-to-use-automod#HowAutoModWorks)
+
+AutoMod withholds messages from chat that may violate the broadcaster’s settings. Moderators can then approve or deny the held messages before they appear in chat.
+
+### Getting the broadcaster’s AutoMod settings
+
+To get the broadcaster’s AutoMod settings, use the [Get AutoMod Settings](https://dev.twitch.tv/docs/api/reference#get-automod-settings) endpoint.
+
+The request must include:
+
+- A user access token that includes the moderator:read:automod_settings scope, or you can use the moderator:manage:automod_settings scope if you’re also editing the settings.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster whose AutoMod settings you’re getting.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+
+The following example shows getting the broadcaster’s AutoMod settings.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/automod/settings?broadcaster_id=12345&moderator_id=98765' \
+-H 'Authorization: Bearer t72crrycenqmqrltqxtymgoy888v' \
+-H 'Client-Id: hof5gwx0suwfnys0nyan9c87zr6t'
+```
+
+There are five levels of filtering: 0 (no filtering) through 4 (strongest filtering). The following example shows what the response would look like if the broadcaster requested the strongest level of filtering, 4.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": 4,
+      "disability": 4,
+      "aggression": 4,
+      "sexuality_sex_or_gender": 4,
+      "misogyny": 4,
+      "bullying": 4,
+      "swearing": 4,
+      "race_ethnicity_or_religion": 4,
+      "sex_based_terms": 4
+    }
+  ]
+}
+```
+
+In the above example, the broadcaster selected level 4 filtering, which applied the same level of filtering to all settings. But that isn’t the case for all levels. In the following example, the broadcaster selected level 2 filtering, but the bullying setting is set to 1 and the swearing setting is set to 0.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": 2,
+      "disability": 2,
+      "aggression": 2,
+      "sexuality_sex_or_gender": 2,
+      "misogyny": 2,
+      "bullying": 1,
+      "swearing": 0,
+      "race_ethnicity_or_religion": 2,
+      "sex_based_terms": 2
+    }
+  ]
+}
+```
+
+The `overall_level` field indicates whether the user selected one of five preset filter levels or chose custom filter levels. If the broadcaster chose custom filter levels for some of the filter settings, the `overall_level` field is set to **null**.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": null,
+      "disability": 3,
+      "aggression": 4,
+      "sexuality_sex_or_gender": 3,
+      "misogyny": 3,
+      "bullying": 4,
+      "swearing": 1,
+      "race_ethnicity_or_religion": 3,
+      "sex_based_terms": 2
+    }
+  ]
+}
+```
+
+### Updating the broadcaster’s AutoMod settings
+
+To update the broadcaster’s AutoMod settings, use the **Update AutoMod Settings** endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:automod_settings** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster whose AutoMod settings you’re updating.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+
+The following example shows updating the broadcaster’s AutoMod settings to one of the preset filter levels.
+
+```bash
+curl -X PUT 'https://api.twitch.tv/helix/moderation/automod/settings?broadcaster_id=12345&moderator_id=98765' \
+-H 'Authorization: Bearer t72crrycenqmqrltqxtymgoy888v' \
+-H 'Client-Id: hof5gwx0suwfnys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"overall_level":3}'
+```
+
+The following example shows the response to the previous request.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": 3,
+      "disability": 3,
+      "aggression": 3,
+      "sexuality_sex_or_gender": 3,
+      "misogyny": 3,
+      "bullying": 2,
+      "swearing": 0,
+      "race_ethnicity_or_religion": 3,
+      "sex_based_terms": 3
+    }
+  ]
+}
+```
+
+Because PUT is an overwrite operation, you must include all the fields you want set after the operation completes. Typically, you’ll send a GET request, update the fields you want to change, and pass that object in the PUT request.
+
+You can set either `overall_level` or the individual settings like `aggression`, but not both.
+
+Setting `overall_level` applies default values to the individual settings. However, setting `overall_level` to 2 does not mean that it applies 2 to all the individual settings. Instead, it applies a set of recommended defaults to the rest of the settings. For example, if you set `overall_level` to 2, Twitch provides some filtering on discrimination and sexual content, but more filtering on hostility.
+
+If `overall_level` is currently set and you update `swearing` to 3, the API sets `overall_level` to **null** and sets all the other settings to 0. The same is true if individual settings are set and you update `overall_level` to 3 — all the individual settings are updated to reflect the default setting values when `overall_level` is 3.
+
+Note that if you set all the individual settings to values that would match what one of the `overall_level` values would have set them to, the `overall_level` field is set to that overall value instead of to **null**.
+
+Valid values for all settings are from 0 (no filtering) through 4 (most aggressive filtering). These levels affect how aggressively AutoMod holds back messages for moderators to review before they appear in chat or are denied (not shown).
+
+The following example changes the `swearing` setting to 2.
+
+```bash
+curl -X PUT 'https://api.twitch.tv/helix/moderation/automod/settings?broadcaster_id=12345&moderator_id=98765' \
+-H 'Authorization: Bearer t72crrycenqmqrltqxtymgoy888v' \
+-H 'Client-Id: hof5gwx0suwfnys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"swearing":2}'
+```
+
+The following example shows what the settings look like after the request. Because the request specified only the `swearing` filter, all the other fields were set to 0.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": null,
+      "disability": 0,
+      "aggression": 0,
+      "sexuality_sex_or_gender": 0,
+      "misogyny": 0,
+      "bullying": 0,
+      "swearing": 2,
+      "race_ethnicity_or_religion": 0,
+      "sex_based_terms": 0
+    }
+  ]
+}
+```
+
+If the `overall_level` field was set to 3 before the request, and the goal was to change the `swearing` setting and leave all the others unchanged, the request must include all the other settings as well.
+
+```bash
+curl -X PUT 'https://api.twitch.tv/helix/moderation/automod/settings?broadcaster_id=12345&moderator_id=98765' \
+-H 'Authorization: Bearer t72crrycenqmqrltqxtymgoy888v' \
+-H 'Client-Id: hof5gwx0suwfnys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"disability":3,"aggression":3,"sexuality_sex_or_gender":3,"misogyny":3,"bullying":2,"swearing":2,"race_ethnicity_or_religion":3,"sex_based_terms":3}'
+```
+
+The following example shows the intended result.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "12345",
+      "moderator_id": "98765",
+      "overall_level": null,
+      "disability": 3,
+      "aggression": 3,
+      "sexuality_sex_or_gender": 3,
+      "misogyny": 3,
+      "bullying": 2,
+      "swearing": 2,
+      "race_ethnicity_or_religion": 3,
+      "sex_based_terms": 3
+    }
+  ]
+}
+```
+
+## Allow or deny held AutoMod messages
+
+If AutoMod flags a chat message as possibly inappropriate based on the broadcaster’s AutoMod settings, it holds it until a moderator reviews it and either allows it or denies it. To get the held messages, your app must subscribe to the **automod-queue.<moderator_id>.<channel_id>** [topic](https://dev.twitch.tv/docs/pubsub#topics) (aka event) using [PubSub](https://dev.twitch.tv/docs/pubsub). The subscription sends a notification to your app when AutoMod holds a message for review. The following example shows what that message looks like.
+
+```json
+{
+  "type": "MESSAGE",
+  "data": {
+    "topic": "automod-queue.46024993.44322889",
+    "message": {
+      "type": "automod_caught_message",
+      "data": {
+        "message": {
+          "id": "abc-123-def-456",
+          "content": {
+            "text": "a bad word",
+            "fragments": [
+              {
+                "text": "a bad word",
+                "automod": {
+                  "topics": {
+                    "swearing": 6
+                  }
+                }
+              }
+            ]
+          },
+          "sender": {
+            "user_id": "559969259",
+            "login": "msongvo222",
+            "display_name": "msongvo222",
+            "chat_color": "#8A2BE2"
+          },
+          "sent_at": "2021-05-24T18:46:20.964Z"
+        },
+        "content_classification": {
+          "category": "swearing",
+          "level": 2
+        },
+        "status": "PENDING",
+        "reason_code": "",
+        "resolver_id": "",
+        "resolver_login": ""
+      }
+    }
+  }
+}
+```
+
+Note that the `status` field is set to PENDING. For details about the message’s fields, see [Example AutoMod Queue Message](https://dev.twitch.tv/docs/pubsub#example-automod-queue-message). To get notifications about resolved messages (whether they were allowed or denied), subscribe to the **chat_moderator_actions** events.
+
+After the moderator makes a determination about the message, use the [Manage Held AutoMod Messages](https://dev.twitch.tv/docs/api/reference#manage-held-automod-messages) endpoint to allow or deny the message.
+
+The request must include:
+
+- The `user_id` field in the body of the request that’s set to the ID in the message’s `data.message.data.message.sender.user_id` field.
+- The `msg_id` field in the body of the request that’s set to the ID in the message’s `data.message.data.message.id` field.
+- The `action` field in the body of the request that’s set to ALLOW or DENY based on the moderator’s determination.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/moderation/automod/message' \
+-H 'Authorization: Bearer cfabdegwdomawdzdo98xt2fo512y' \
+-H 'Client-Id: uo6dggojyb8d6s92zknwmi5ej1q2' \
+-H 'Content-Type: application/json' \
+-d '{"user_id":"12345","msg_id":"abc-123-def-456","action":"ALLOW"}'
+```
+
+If successful, the request returns an HTTP 204 No Content status code.
+
+### Test messages based on AutoMod settings
+
+If you want to test whether AutoMod would flag a message based on the broadcaster’s AutoMod settings, use the [Check AutoMod Status](https://dev.twitch.tv/docs/api/reference#check-automod-status) endpoint. This endpoint also tests whether the channel’s blocked terms would prevent the message from being posted to chat.
+
+The request must include:
+
+- A user access token that includes the **moderation:read** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster whose AutoMod setting you want to test messages against. This ID must match the user ID in the user access token.
+- A body with the following fields:
+  - The `data` field that’s set to an object with the following fields:
+    - The `msg-id` field that’s set to a caller-defined ID.
+    - The `msg-text` field that’s set to the message to test.
+
+```
+curl -X POST 'https://api.twitch.tv/helix/moderation/enforcements/status?broadcaster_id=123456' \
+-H 'Authorization: Bearer 42es0ohz1smtdrtsaq20g46oks31' \
+-H 'Client-Id: hof5gwx0su6owys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"data":[{"msg_id":1,"msg_text":"i hate you!"},{"msg_id":2,"msg_text":"butterflies and unicorns"}]}
+The following response shows that AutoMod would flag the first message but not the second message.
+
+{
+  "data": [
+    {
+      "msg_id": "1",
+      "is_permitted": false
+    },
+    {
+      "msg_id": "2",
+      "is_permitted": true
+    }
+  ]
+}
+```
+
+Note that the messages in the response are not guaranteed to be in the same order as the request.
+
+## Managing bad behavior
+
+If a user is behaving badly in chat, you might put them in a timeout to give them a chance to cooldown. If they continue behaving badly, you have the option to ban them from chat. If the user’s behavior is really bad, you might ban them without first putting them in a timeout.
+
+### Putting a user in a timeout
+
+To put a user in a timeout, use the [Ban User](https://dev.twitch.tv/docs/api/reference#ban-user) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:banned_users** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- A body with the following fields:
+  - The `data` field that’s set to an object with the following fields:
+    - The `user_id` field that’s set to the ID of the user to put in a timeout.
+    - The `duration` field that’s set to the length of the timeout in seconds.
+    - The `reason` field that’s set to the reason for putting the user in a timeout. Optional.
+
+The following example puts the user in a 5 minute timeout. No reason is given for the timeout.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "1234",
+      "moderator_id": "5678",
+      "user_id": "9876",
+      "created_at": "2022-08-04T16:49:01Z",
+      "end_time": "2022-08-04T16:54:01Z"
+    }
+  ]
+}
+```
+
+While a user is in a timeout, you can extend or shorten the timeout by calling the endpoint again with a longer or shorter duration. Or, if you think the user’s behavior warrants it, you can ban them.
+
+### Banning a user from chat
+
+To ban a user, use the [Ban User](https://dev.twitch.tv/docs/api/reference#ban-user) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:banned_users** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- A body with the following fields:
+  - The `data` field that’s set to an object with the following fields:
+    - The `user_id` field that’s set to the ID of the user to ban.
+    - The `reason` field that’s set to the reason for banning the user. Optional.
+
+The following example bans a user from the broadcaster’s chat room. No reason is given for the ban. Notice that the only difference between banning the user and putting them in a timeout, is you don’t include the `duration` field.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/moderation/bans?broadcaster_id=1234&moderator_id=5678' \
+-H 'Authorization: Bearer 3roj7kbiewqqhl9t6nb3vdvxrbdvlm' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"data":{"user_id":"9876"}}' 
+```
+
+The response to the ban request. Because bans don’t expire, the `end_time` field is set to **null**.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "713936733",
+      "moderator_id": "713936733",
+      "user_id": "800154565",
+      "created_at": "2022-08-04T17:12:49Z",
+      "end_time": null
+    }
+  ]
+}
+```
+
+### Removing a ban or timeout
+
+To remove a ban or timeout, use the [Unban](https://dev.twitch.tv/docs/api/reference#unban-user) User endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:banned_users** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- The user_id query parameter that’s set to the ID of the user to remove from a ban or timeout.
+
+The following example shows how to remove a user from a ban or timeout.
+
+```bash
+curl -X DELETE 'https://api.twitch.tv/helix/moderation/bans?broadcaster_id=1234&moderator_id=5678&user_id=9876' \
+-H 'Authorization: Bearer 3roj7kbiewqqhl9t6nb3vdvxrbdvlm' \
+-H 'Client-Id: hof5gwx0su6owfnys0nyan9c87zr6t'
+If the request succeeds, the response is an HTTP 204 No Content status code.
+```
+
+If the request succeeds, the response is an HTTP 204 No Content status code.
+
+### Getting a list of users that are banned or in a timeout
+
+To get the list of users that the broadcaster has banned or put in a timeout, use the [Get Banned Users](https://dev.twitch.tv/docs/api/reference#get-banned-users) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderation:read** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room. This ID must match the user ID in the user access token.
+
+The following example shows how to get the list of users that were banned or put in a timeout.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/bans?broadcaster_id=1234' \
+-H 'Authorization: Bearer 3roj7kbiewqq9t6nb3vdvxrbdvlm' \
+-H 'Client-Id: hof5gwx0su6owfnys0nn9c87zr6t'
+```
+
+The following example shows what the response looks like. The first user was put in a five minute timeout (you can tell this because the `expires_at` field is set to a timestamp). And the second user was banned (you can tell this because the `expires_at` field is set to an empty string). The list is in order of the `created_at` timestamp.
+
+```json
+{
+  "data": [
+    {
+      "user_id": "13579",
+      "user_login": "rollinpants",
+      "user_name": "RollinPants",
+      "expires_at": "2022-08-04T19:00:08Z",
+      "created_at": "2022-08-04T18:55:08Z",
+      "reason": "",
+      "moderator_id": "5678",
+      "moderator_login": "modovermod",
+      "moderator_name": "ModOverMod"
+    },
+    {
+      "user_id": "98765",
+      "user_login": "toastedwheaties",
+      "user_name": "ToastedWheaties",
+      "expires_at": "",
+      "created_at": "2022-08-04T18:54:31Z",
+      "reason": "",
+      "moderator_id": "5678",
+      "moderator_login": "modovermod",
+      "moderator_name": "ModOverMod"
+    }
+  ],
+  "pagination": {}
+}
+```
+
+And here’s what the response looks like if the broadcaster hasn’t banned anyone or put them in a timeout.
+
+```json
+{
+  "data": [],
+  "pagination": {}
+}
+```
+
+The endpoint provides the following optional query parameter:
+
+- user_id — A filter that you can use to determine whether specific users are banned or in a timeout. To specify more than one ID, include this parameter for each user you want to get. For example, `user_id=1234&user_id=5678`. You may specify a maximum of 100 IDs. Ignores duplicate and invalid IDs.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/banned?broadcaster_id=1234&user_id=5678&user_id=9012&user_id=123' \
+-H 'Authorization: Bearer lk9t9o4qyhnlwwy9rs2pwao0kutr' \
+-H 'Client-Id: hof5gwx0su6owfnysyan9c87zr6t'
+```
+
+## Blocking words or phrases from chat
+
+If a broadcaster doesn’t like certain words or phrases, they can block them from being used in their chat room.
+
+### Adding blocked terms
+
+To block a word or phrase (term), use the [Add Blocked Term](https://dev.twitch.tv/docs/api/reference#add-blocked-term) endpoint. This endpoint adds the term to the broadcaster’s list of public blocked terms only. Broadcasters must use the Twitch UX to add terms to their private list of blocked terms (see **Blocked Terms and Phrases** under **Creator Dashboard, Settings, Moderation**).
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:blocked_terms** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- A body with the following field:
+  - The `text` field that’s set to the term to block.
+
+Terms must contain a minimum of 2 characters and may contain up to a maximum of 500 characters. Chat blocks messages that contain all words in the term. The words don’t have to appear in the same order. For example, adding the term, hi there doesn’t block messages containing only hi or there, but it does block hi there and there hi. Comparisons are case insensitive.
+
+Terms may use a wildcard character (*) to block variations of a term. For example, adding the word shoot* also blocks shooting, shoots, and other variations. The wildcard must appear only at the beginning or end of the term.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/moderation/blocked_terms?broadcaster_id=1234&moderator_id=5678' \
+-H 'Authorization: Bearer tmlk2xqxg8ofx8nage9gbwpexyyr' \
+-H 'Client-Id: hof5gwx0su6onys0nyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"text":"because i said so"}'
+```
+
+The following example shows the response to the previous request. If the term already exists, the response contains the existing blocked term and ID.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "1234",
+      "moderator_id": "5678",
+      "id": "4a00cffa-ec5c-4c13-93c1-8c3fa5ae8ccc",
+      "text": "because i said so",
+      "created_at": "2022-08-04T21:28:28Z",
+      "updated_at": "2022-08-04T21:28:28Z",
+      "expires_at": null
+    }
+  ]
+}
+```
+
+### Removing a term from the broadcaster’s list of blocked terms
+
+To remove terms from the broadcaster’s list of public blocked terms, use the [Remove Blocked Term](https://dev.twitch.tv/docs/api/reference#remove-blocked-term) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:blocked_terms** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- The id query parameter that’s set to the ID of the blocked term to delete. You can get this ID from when you [added](https://dev.twitch.tv/docs/api/moderation/#adding-blocked-terms) the term or [retrieved](https://dev.twitch.tv/docs/api/moderation/#getting-a-broadcasters-list-of-blocked-terms) the broadcaster’s list of terms.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/blocked_terms?broadcaster_id=1234&moderator_id=5678&id=' \
+-H 'Authorization: Bearer tmlk2xqxc8ofx8nage9gbwpexyyr' \
+-H 'Client-Id: hof5gwx0su6owfn0nyan9c87zr6t'
+```
+
+If successful, the response is an HTTP 204 No Content status code.
+
+### Getting a broadcaster’s list of blocked terms
+
+To get a list of blocked terms, use the [Get Blocked Terms](https://dev.twitch.tv/docs/api/reference#get-blocked-terms) endpoint. The list contains the broadcaster’s public list of blocked terms.
+
+The request must include:
+
+- A user access token that includes the **moderator:read:blocked_terms** scope, or you can use the **moderator:manage:blocked_terms** scope if you’re also adding or removing blocked terms.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+
+```bash
+curl -X GET 'https://api.twitch.tv/helix/moderation/blocked_terms?broadcaster_id=1234&moderator_id=5678' \
+-H 'Authorization: Bearer tmlk2xqxc8ofx8nage9gbwpexyyr' \
+-H 'Client-Id: hof5gwx0su6owfn0nyan9c87zr6t'
+```
+
+The following example shows what the response looks like. One of the broadcaster’s moderators added the first term and the broadcaster added the second term (the `moderator_id` field contains the broadcaster’s ID). The second term also shows using a wildcard character to block all variations of shoot.
+
+```json
+{
+  "data": [
+    {
+      "broadcaster_id": "1234",
+      "moderator_id": "5678",
+      "id": "81931a11-8e90-4b5c-9471-45ba9698d6b7",
+      "text": "because i said so",
+      "created_at": "2022-08-04T21:37:44Z",
+      "updated_at": "2022-08-04T21:37:44Z",
+      "expires_at": null
+    },
+    {
+      "broadcaster_id": "1234",
+      "moderator_id": "1234",
+      "id": "a9dfb5d4-56f8-4a53-b90e-fdea1fc7eeae",
+      "text": ":shoot*",
+      "created_at": "2022-08-04T21:08:08Z",
+      "updated_at": "2022-08-04T21:08:08Z",
+      "expires_at": null
+    },
+    . . .
+  ],
+  "pagination": {}
+}
+```
+
+## Deleting chat messages
+
+Moderators can delete all messages in the chat room or specific messages.
+
+### Removing all messages from chat
+
+To remove all messages from chat, use the [Delete Chat Messages](https://dev.twitch.tv/docs/api/reference#delete-chat-messages) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:chat_messages** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+
+```bash
+curl -X DELETE 'https://api.twitch.tv/helix/moderation/chat?broadcaster_id=1234&moderator_id=5678' \
+-H 'Authorization: Bearer ln6n5azzuliqq57gmncybxrno4fy' \
+-H 'Client-Id: hof5gwx0su6onys0nyan9c87zr6t'
+```
+
+If successful, the response is an HTTP 204 No Content status code.
+
+### Removing a specific message from chat
+
+If a user posts a message that wasn’t filtered out by other means, you can use the [Delete Chat Messages](https://dev.twitch.tv/docs/api/reference#delete-chat-messages) endpoint to remove it from chat.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:chat_messages** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- The id query parameter that’s set to the ID of the message to delete. The message must be less than 6 hours old and it must not belong to the broadcaster.
+`
+To get the chat message’s ID, listen to the Twitch IRC server for `PRIVMSG` messages in the broadcaster’s chat room (see [Chat & Chatbots](https://dev.twitch.tv/docs/irc)). You must request the [tags capability](https://dev.twitch.tv/docs/irc/capabilities), which includes the `id` tag in the `PRIVMSG` message (see [PRIVMSG Tags](https://dev.twitch.tv/docs/irc/tags#privmsg-tags)).
+
+```bash
+curl -X DELETE 'https://api.twitch.tv/helix/moderation/chat?broadcaster_id=1234&moderator_id=5678&id=abc-123-def-456' \
+-H 'Authorization: Bearer ln6n5azzuliqq57gmncybxrno4fy' \
+-H 'Client-Id: hof5gwx0su6onys0nyan9c87zr6t'
+```
+
+If successful, the response is an HTTP 204 No Content status code.
+
+## Making announcements in chat
+
+To make announcements in chat, use the [Send Chat Announcement](https://dev.twitch.tv/docs/api/reference#send-chat-announcement) endpoint.
+
+The request must include:
+
+- A user access token that includes the **moderator:manage:chat_messages** scope.
+- The broadcaster_id query parameter that’s set to the ID of the broadcaster that owns the chat room.
+- The moderator_id query parameter that’s set to the ID of a user that moderates the broadcaster’s chat room or the broadcaster’s ID. This ID must match the user ID in the user access token.
+- A body with the following fields:
+  - The `message` field that’s set to the announcement. The announcement must not exceed 500 characters.
+  - The `color` field that’s set to the color used to highlight the announcement. This field is optional. For a list of possible colors that you may specify, see [Send Chat Announcement](https://dev.twitch.tv/docs/api/reference#send-chat-announcement). If `color` is set to primary or is not set, the channel’s accent color is used to highlight the announcement.
+
+The following example uses the color orange to highlight the announcement.
+
+```bash
+curl -X POST 'https://api.twitch.tv/helix/chat/announcements?broadcaster_id=1234&moderator_id=5678' \
+-H 'Authorization: Bearer gtxc4lxkvt68eanxiz8urriumkuv' \
+-H 'Client-Id: hof5gwx0su6owfnynyan9c87zr6t' \
+-H 'Content-Type: application/json' \
+-d '{"message":"Don'\''t miss Jon'\''s special broadcaster later this week!","color":"orange"}'
+```
+
+If successful, the response is an HTTP 204 No Content status code.
