@@ -44,7 +44,7 @@ jobs:
     - name: Update deployment tag in GitOps repo
       run: |
         APP_NAME="twitch-docs-i18n"
-        cd gitops/apps/${APP_NAME}
+        cd gitops/apps/haenu/${APP_NAME}
         sed -i "s|image: hyeonwoo5342/${APP_NAME}:.*|image: hyeonwoo5342/${APP_NAME}:${{ github.run_number }}|g" deployment.yaml
         git config user.name "dokdo2013"
         git config user.email "hyeonwoo5342@gmail.com"
